@@ -1,0 +1,187 @@
+/* --- ZÁKLADNÍ NASTAVENÍ --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212; /* Tmavé pozadí */
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+:root {
+    --primary: #ff6600; /* Oranžová */
+    --dark: #1e1e1e;    /* Pozadí karet/sidebaru */
+    --hover: #2d2d2d;
+}
+
+/* --- NAVIGACE --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background-color: #000;
+    border-bottom: 2px solid var(--primary);
+}
+.logo { font-size: 1.5rem; font-weight: bold; }
+.color-accent { color: var(--primary); }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a:hover { color: var(--primary); }
+
+/* --- HLAVNÍ ROZLOŽENÍ (SIDEBAR + OBSAH) --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.main-layout {
+    display: grid;
+    /* Tady nastavujeme poměr: levý sloupec 250px, pravý zbytek */
+    grid-template-columns: 260px 1fr; 
+    gap: 40px;
+    margin-top: 40px;
+    margin-bottom: 60px;
+    align-items: start; /* Aby sidebar nezačínal uprostřed */
+}
+
+/* --- LEVÝ SLOUPEC (SIDEBAR) --- */
+.sidebar h3 {
+    font-size: 1.1rem;
+    color: #888;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.sidebar-menu li {
+    margin-bottom: 8px;
+}
+
+.sidebar-menu a {
+    display: block;
+    padding: 8px 0;
+    color: #ccc;
+    font-size: 0.95rem;
+    transition: 0.2s;
+    border-bottom: 1px solid #222;
+}
+
+.sidebar-menu a:hover {
+    color: var(--primary);
+    padding-left: 5px; /* Efekt posunutí při najetí */
+}
+
+/* Podkategorie (odsazené) */
+.submenu {
+    margin-left: 15px;
+    margin-top: 5px;
+    border-left: 1px solid #333;
+    padding-left: 10px;
+}
+.submenu a { font-size: 0.85rem; border: none; }
+
+.sidebar-info {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: var(--dark);
+    border-radius: 5px;
+}
+
+/* --- PRAVÝ SLOUPEC (PRODUKTY) --- */
+.page-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.products-grid {
+    display: grid;
+    /* Automatická mřížka - 3 vedle sebe na velkém monitoru */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+    gap: 25px;
+}
+
+/* --- KARTA PRODUKTU (Styl E-shop) --- */
+.card {
+    background-color: var(--dark); /* Barva karty */
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    text-align: center; /* Text na střed jako na obrázku */
+    border: 1px solid transparent;
+}
+
+.card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.card-image img {
+    width: 100%;
+    aspect-ratio: 1/1; /* Čtvercový obrázek */
+    object-fit: cover;
+}
+
+.card-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.card-info h3 {
+    font-size: 1rem;
+    font-weight: normal;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.price {
+    font-weight: bold;
+    color: #bbb;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+/* Tlačítko "Výběr možností" */
+.btn-shop {
+    background-color: var(--primary);
+    color: white;
+    padding: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 3px;
+    display: block;
+    margin-top: auto;
+}
+
+.card:hover .btn-shop {
+    background-color: #e65c00;
+}
+
+/* --- PATIČKA --- */
+footer {
+    text-align: center;
+    padding: 30px;
+    background-color: #000;
+    margin-top: 50px;
+    border-top: 1px solid #333;
+    color: #666;
+}
+
+/* --- MOBILNÍ VERZE --- */
+@media (max-width: 768px) {
+    .main-layout {
+        grid-template-columns: 1fr; /* Pod sebe na mobilu */
+    }
+    .sidebar {
+        display: none; /* Na mobilu sidebar skryjeme pro jednoduchost */
+    }
+}
