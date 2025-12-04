@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Print Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">3D Print<span>Studio</span></div>
+        
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <ul class="nav-links" id="nav-menu">
+            <li><a href="index.html">Domů</a></li>
+            
+            <li class="dropdown">
+                <a href="#">Kategorie <i class="fa-solid fa-caret-down" style="margin-left:5px;"></i></a>
+                <div class="dropdown-content">
+                    <a href="#">📂 Dekorace</a>
+                    <a href="#">📂 Flexi zvířátka</a>
+                    <a href="#">📂 Držáky a stojany</a>
+                    <a href="#">📂 Sezónní (Vánoce)</a>
+                    <a href="#">📂 Klíčenky</a>
+                </div>
+            </li>
+
+            <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Naše produkty</h1>
+
+        <div class="products-grid">
+            
+            <a href="produkt-mechanicky-dil.html" class="card">
+                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl"></div>
+                <div class="card-info">
+                    <h3>Mechanický díl</h3>
+                    <p class="price">250 Kč</p>
+                    <span class="btn">Detail</span>
+                </div>
+            </a>
+
+            <a href="produkt-drak.html" class="card">
+                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak"></div>
+                <div class="card-info">
+                    <h3>Figurka Draka</h3>
+                    <p class="price">450 Kč</p>
+                    <span class="btn">Detail</span>
+                </div>
+            </a>
+
+            <a href="produkt-drzak.html" class="card">
+                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drzak" alt="Držák"></div>
+                <div class="card-info">
+                    <h3>Držák sluchátek</h3>
+                    <p class="price">150 Kč</p>
+                    <span class="btn">Detail</span>
+                </div>
+            </a>
+
+             <a href="#" class="card">
+                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Vaza" alt="Váza"></div>
+                <div class="card-info">
+                    <h3>Váza</h3>
+                    <p class="price">299 Kč</p>
+                    <span class="btn">Detail</span>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("nav-menu");
+            menu.classList.toggle("active");
+        }
+    </script>
+
+</body>
+</html>
