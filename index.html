@@ -7,15 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* =========================================
-           STYLY (VZHLED WEBU)
-           ========================================= */
+        /* --- ZÁKLADNÍ STYLY --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
-        /* NAVIGACE */
+        /* --- NAVIGACE (LIŠTA) --- */
         nav {
             background: #000;
             border-bottom: 2px solid #ff6600;
@@ -38,6 +36,7 @@
             cursor: pointer;
         }
 
+        /* Hlavní odkazy */
         .nav-links {
             display: flex;
             height: 100%;
@@ -51,6 +50,7 @@
             position: relative;
         }
 
+        /* Styl odkazů */
         .nav-links > li > a {
             padding: 0 20px;
             color: #ccc;
@@ -59,6 +59,7 @@
             display: flex;
             align-items: center;
             transition: 0.3s;
+            cursor: pointer; /* Aby bylo jasné, že se na to dá kliknout */
         }
 
         .nav-links > li > a:hover {
@@ -66,9 +67,9 @@
             background: #1a1a1a;
         }
 
-        /* Rozbalovací menu (PC) */
+        /* --- ROZBALOVACÍ MENU (PODKATEGORIE) --- */
         .dropdown-content {
-            display: none;
+            display: none; /* Ve výchozím stavu skryté */
             position: absolute;
             top: 70px;
             left: 0;
@@ -86,11 +87,14 @@
             height: auto !important;
         }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
+        /* PC: Když najedu myší, ukaž menu */
+        @media (min-width: 769px) {
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
         }
 
-        /* OBSAH */
+        /* --- OBSAH --- */
         .container { max-width: 1200px; margin: 40px auto; padding: 0 15px; }
         .page-title { text-align: center; margin-bottom: 30px; font-size: 2rem; color: #fff; }
 
@@ -113,10 +117,15 @@
         .price { font-weight: bold; color: #bbb; display: block; margin: 10px 0; }
         .btn { background: #ff6600; color: white; padding: 8px 15px; border-radius: 4px; display: inline-block; }
 
-        /* MOBILNÍ VERZE */
+
+        /* =========================================
+           📱 MOBILNÍ VERZE
+           ========================================= */
         @media (max-width: 768px) {
+            
             .menu-toggle { display: block; }
 
+            /* Hlavní menu (skryté) */
             .nav-links {
                 display: none; 
                 flex-direction: column;
@@ -130,6 +139,7 @@
                 padding-bottom: 20px;
             }
 
+            /* Třída pro zobrazení hlavního menu */
             .nav-links.active {
                 display: flex !important;
             }
@@ -145,16 +155,22 @@
                 width: 100%;
                 padding: 15px;
                 font-size: 1.1rem;
+                justify-content: space-between; /* Aby šipka byla vpravo */
             }
 
-            /* Kategorie na mobilu - vždy rozbalené */
+            /* --- PODKATEGORIE NA MOBILU --- */
             .dropdown-content {
-                display: block !important; 
-                position: static;
+                display: none; /* I na mobilu SKRYTÉ, dokud nekliknu */
+                position: static; /* Součást seznamu */
                 background: #111;
                 border: none;
                 box-shadow: none;
                 width: 100%;
+            }
+
+            /* Třída pro zobrazení podkategorií (přidá JS) */
+            .dropdown-content.show-submenu {
+                display: block !important;
             }
             
             .dropdown-content a {
@@ -172,20 +188,25 @@
 
     <nav>
         <div class="logo">3D Print<span>Studio</span></div>
+        
         <div class="menu-toggle" onclick="toggleMenu()">
             <i class="fa-solid fa-bars"></i>
         </div>
+
         <ul class="nav-links" id="nav-menu">
             <li><a href="index.html">Domů</a></li>
+            
             <li class="dropdown">
-                <a href="#">Kategorie <i class="fa-solid fa-caret-down" style="margin-left: 5px;"></i></a>
-                <div class="dropdown-content">
+                <a onclick="toggleSubmenu()">Kategorie <i class="fa-solid fa-chevron-down"></i></a>
+                
+                <div class="dropdown-content" id="mySubmenu">
                     <a href="#">📂 Dekorace</a>
                     <a href="#">📂 Flexi zvířátka</a>
                     <a href="#">📂 Držáky</a>
                     <a href="#">📂 Vánoce</a>
                 </div>
             </li>
+
             <li><a href="#kontakt">Kontakt</a></li>
         </ul>
     </nav>
@@ -220,14 +241,17 @@
                     <span class="btn">Detail</span>
                 </div>
             </a>
+
         </div>
     </div>
 
     <script>
+        // Funkce 1: Otevře/Zavře hlavní menu (3 čárky)
         function toggleMenu() {
             var menu = document.getElementById("nav-menu");
             menu.classList.toggle("active");
         }
-    </script>
-</body>
-</html>
+
+        // Funkce 2: Otevře/Zavře podkategorie (Když kliknu na "Kategorie")
+        function toggleSubmenu() {
+            // Najdeme to podmenu podle ID
