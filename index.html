@@ -119,4 +119,193 @@
                 position: absolute; 
                 top: 70px; left: 0; width: 100%; 
                 background: #000; height: auto; 
-                border-bottom: 2
+                border-bottom: 2px solid #ff6600; 
+                padding-bottom: 20px;
+            }
+            .nav-links.otevreno { display: flex !important; }
+            
+            .nav-links li { width: 100%; display: block; border-bottom: 1px solid #222; }
+            .nav-links > li > a { width: 100%; padding: 15px; justify-content: space-between; font-size: 1.1rem; }
+            
+            /* PODMENU NA MOBILU */
+            .submenu { 
+                display: none; /* Skryté, dokud se neklikne */
+                position: static; /* Není vznášející, je součástí seznamu */
+                width: 100%; 
+                border: none; 
+                background: #111; 
+                box-shadow: inset 0 0 10px #000;
+            }
+            
+            /* Třída pro otevření podmenu (přidá JS) */
+            .submenu.otevreno { display: block !important; }
+            
+            .submenu a { padding-left: 50px; font-size: 0.95rem; color: #888; }
+            
+            .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">3D Print<span>Studio</span></div>
+
+        <ul class="nav-links" id="hlavniMenu">
+            <li><a href="#">Domů</a></li>
+            
+            <li class="dropdown">
+                <a onclick="ukazPodMenu()">Kategorie <i class="fa-solid fa-chevron-down"></i></a>
+                
+                <div class="submenu" id="podMenu">
+                    <a href="#">📂 Dekorace</a>
+                    <a href="#">📂 Flexi zvířátka</a>
+                    <a href="#">📂 Držáky</a>
+                </div>
+            </li>
+            
+            <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="cart-icon-wrap" onclick="otevritKosik()">
+                <i class="fa-solid fa-shopping-cart"></i>
+                <span class="cart-count" id="pocet-v-kosiku">0</span>
+            </div>
+            <div class="hamburger-btn" onclick="ukazHlavniMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>E-shop</h1>
+        <div class="products-grid">
+            <div class="card">
+                <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl">
+                <div class="card-info">
+                    <h3>Mechanický díl</h3>
+                    <div class="price">250 Kč</div>
+                    <button class="btn-buy" onclick="pridatDoKosiku('Mechanický díl', 250)">Do košíku</button>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak">
+                <div class="card-info">
+                    <h3>Drak Rainbow</h3>
+                    <div class="price">450 Kč</div>
+                    <button class="btn-buy" onclick="pridatDoKosiku('Drak Rainbow', 450)">Do košíku</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="kontakt">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>O nás</h3>
+                <p>Kvalitní 3D tisk na zakázku.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Kontakt</h3>
+                <p><i class="fa-solid fa-envelope"></i> info@muj3dtisk.cz</p>
+                <p><i class="fa-solid fa-phone"></i> +420 123 456 789</p>
+                <p><i class="fa-solid fa-location-dot"></i> Praha</p>
+                <p><i class="fa-solid fa-id-card"></i> IČO: 12345678</p>
+            </div>
+        </div>
+        <div class="copyright">&copy; 2025 3D Print Studio.</div>
+    </footer>
+
+    <div class="modal-overlay" id="kosikModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="zavritKosik()">&times;</span>
+            <h2>Košík</h2>
+            <div class="form-section">
+                <div class="cart-items" id="seznam-zbozi"><p>Prázdno</p></div>
+                <div style="text-align:right; font-weight:bold; color:#ff6600;">Celkem: <span id="celkova-cena">0</span> Kč</div>
+            </div>
+            <form class="order-form" action="https://formspree.io/f/VASE_ID_ZDE" method="POST" onsubmit="pripravitData(event)">
+                <input type="hidden" name="OBSAH_KOŠÍKU" id="hidden-cart">
+                <input type="hidden" name="ZÁSILKOVNA_ID" id="zasilkovna-id">
+                <input type="hidden" name="ZÁSILKOVNA_NÁZEV" id="zasilkovna-nazev">
+
+                <div class="form-section">
+                    <h3>Doprava</h3>
+                    <div class="radio-group">
+                        <label><input type="radio" name="Doprava" value="Zásilkovna" onclick="zmenitDopravu('zasilkovna')"> Zásilkovna (79 Kč)</label>
+                        <button type="button" class="btn-zasilkovna" id="btn-vybrat-zasilkovnu" onclick="vybratZasilkovnu()"><i class="fa-solid fa-map-marker-alt"></i> Vybrat místo</button>
+                        <div id="vybrane-misto" class="selected-point"></div>
+                        <label><input type="radio" name="Doprava" value="PPL" onclick="zmenitDopravu('ppl')"> PPL (119 Kč)</label>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Údaje</h3>
+                    <div class="input-group"><input type="text" name="Jméno" placeholder="Jméno" required></div>
+                    <div class="input-group"><input type="email" name="Email" placeholder="Email" required></div>
+                    <div class="input-group"><input type="tel" name="Telefon" placeholder="Telefon" required></div>
+                    <div class="input-group"><input type="text" name="Ulice" placeholder="Ulice" required></div>
+                    <div class="input-group"><input type="text" name="Město" placeholder="Město" required></div>
+                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.9rem;"><input type="checkbox" id="stejna-adresa" checked onclick="toggleFakturacni()"> Fakturační údaje jsou stejné</label>
+                    <div id="fakturacni-sekce">
+                        <h4>Fakturační adresa</h4>
+                        <div class="input-group"><input type="text" name="FA_Jméno" placeholder="Firma"></div>
+                        <div class="input-group"><input type="text" name="FA_Ulice" placeholder="Ulice"></div>
+                        <div class="input-group"><input type="text" name="FA_Město" placeholder="Město"></div>
+                        <div class="input-group"><input type="text" name="IČO" placeholder="IČO"></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-order">ODESLAT</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // MENU - 3 ČÁRKY
+        function ukazHlavniMenu() { 
+            document.getElementById("hlavniMenu").classList.toggle("otevreno"); 
+        }
+
+        // PODMENU - KATEGORIE
+        function ukazPodMenu() { 
+            // Najdeme element s ID "podMenu" a přepneme mu třídu "otevreno"
+            // V CSS je .submenu { display: none } a .submenu.otevreno { display: block }
+            document.getElementById("podMenu").classList.toggle("otevreno"); 
+        }
+
+        // KOŠÍK
+        let kosik = [];
+        function pridatDoKosiku(nazev, cena) { kosik.push({ nazev: nazev, cena: cena }); aktualizovatKosik(); }
+        function smazatZKosiku(index) { kosik.splice(index, 1); aktualizovatKosik(); }
+        function aktualizovatKosik() {
+            document.getElementById("pocet-v-kosiku").innerText = kosik.length;
+            let div = document.getElementById("seznam-zbozi");
+            let total = 0; div.innerHTML = "";
+            kosik.forEach((p, i) => { total += p.cena; div.innerHTML += `<div class="cart-item">${p.nazev} - ${p.cena} Kč <i class="fa-solid fa-trash btn-remove" onclick="smazatZKosiku(${i})"></i></div>`; });
+            document.getElementById("celkova-cena").innerText = total;
+        }
+
+        // OSTATNÍ FUNKCE (Zásilkovna, Modal atd.)
+        function zmenitDopravu(typ) {
+            const btn = document.getElementById("btn-vybrat-zasilkovnu");
+            if (typ === 'zasilkovna') { btn.style.display = "block"; } else { btn.style.display = "none"; document.getElementById("vybrane-misto").innerText = ""; document.getElementById("zasilkovna-id").value = ""; }
+        }
+        function vybratZasilkovnu() {
+            Packeta.Widget.pick('e61d84814ec96726', function(point) {
+                if (point) { document.getElementById("vybrane-misto").innerText = "Vybráno: " + point.name; document.getElementById("zasilkovna-id").value = point.id; document.getElementById("zasilkovna-nazev").value = point.name; }
+            }, { country: 'cz', language: 'cs' });
+        }
+        function toggleFakturacni() { const ch = document.getElementById("stejna-adresa"); const s = document.getElementById("fakturacni-sekce"); if (ch.checked) s.style.display = "none"; else s.style.display = "block"; }
+        function pripravitData(event) {
+            if(kosik.length === 0) { alert("Košík je prázdný!"); event.preventDefault(); return; }
+            const doprava = document.querySelector('input[name="Doprava"]:checked');
+            if (doprava && doprava.value === "Zásilkovna" && document.getElementById("zasilkovna-id").value === "") { alert("Vyberte Zásilkovnu!"); event.preventDefault(); return; }
+            let t = ""; let c = 0; kosik.forEach(p => { t += p.nazev + " (" + p.cena + " Kč)\n"; c += p.cena; }); t += "\nCELKEM: " + c + " Kč";
+            document.getElementById("hidden-cart").value = t;
+        }
+        function otevritKosik() { document.getElementById("kosikModal").style.display = "flex"; }
+        function zavritKosik() { document.getElementById("kosikModal").style.display = "none"; }
+    </script>
+</body>
+</html>
