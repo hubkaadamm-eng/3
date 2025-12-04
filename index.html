@@ -8,16 +8,14 @@
     
     <style>
         /* =========================================
-           1. ZÁKLADNÍ STYLY (Pro všechny)
+           STYLY (VZHLED WEBU)
            ========================================= */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
-        /* =========================================
-           2. NAVIGACE (Počítač)
-           ========================================= */
+        /* NAVIGACE */
         nav {
             background: #000;
             border-bottom: 2px solid #ff6600;
@@ -33,7 +31,6 @@
         .logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
         .logo span { color: #ff6600; }
 
-        /* Tlačítko MENU (na PC skryté) */
         .menu-toggle {
             display: none; 
             font-size: 1.8rem;
@@ -41,7 +38,6 @@
             cursor: pointer;
         }
 
-        /* Hlavní menu */
         .nav-links {
             display: flex;
             height: 100%;
@@ -70,9 +66,9 @@
             background: #1a1a1a;
         }
 
-        /* --- Rozbalovací menu (Kategorie) --- */
+        /* Rozbalovací menu (PC) */
         .dropdown-content {
-            display: none; /* Skryté */
+            display: none;
             position: absolute;
             top: 70px;
             left: 0;
@@ -87,17 +83,14 @@
             padding: 15px 20px;
             border-bottom: 1px solid #333;
             color: #bbb;
-            height: auto !important; /* Oprava výšky */
+            height: auto !important;
         }
 
-        /* Na PC: Ukaž menu při najetí myši */
         .dropdown:hover .dropdown-content {
             display: block;
         }
 
-        /* =========================================
-           3. OBSAH (Produkty)
-           ========================================= */
+        /* OBSAH */
         .container { max-width: 1200px; margin: 40px auto; padding: 0 15px; }
         .page-title { text-align: center; margin-bottom: 30px; font-size: 2rem; color: #fff; }
 
@@ -120,16 +113,10 @@
         .price { font-weight: bold; color: #bbb; display: block; margin: 10px 0; }
         .btn { background: #ff6600; color: white; padding: 8px 15px; border-radius: 4px; display: inline-block; }
 
-
-        /* =========================================
-           4. MOBILNÍ VERZE (OPRAVENO)
-           ========================================= */
+        /* MOBILNÍ VERZE */
         @media (max-width: 768px) {
-            
-            /* Ukázat tlačítko */
             .menu-toggle { display: block; }
 
-            /* Skrýt menu a nastavit ho pod sebe */
             .nav-links {
                 display: none; 
                 flex-direction: column;
@@ -143,7 +130,6 @@
                 padding-bottom: 20px;
             }
 
-            /* Třída pro zobrazení (přes JS) */
             .nav-links.active {
                 display: flex !important;
             }
@@ -161,8 +147,7 @@
                 font-size: 1.1rem;
             }
 
-            /* --- KATEGORIE NA MOBILU --- */
-            /* Vynutit zobrazení podkategorií */
+            /* Kategorie na mobilu - vždy rozbalené */
             .dropdown-content {
                 display: block !important; 
                 position: static;
@@ -172,7 +157,6 @@
                 width: 100%;
             }
             
-            /* Odsazení kategorií doprava */
             .dropdown-content a {
                 padding-left: 50px; 
                 font-size: 0.95rem;
@@ -180,10 +164,7 @@
                 border-bottom: 1px solid #222;
             }
 
-            /* Produkty: 2 vedle sebe */
             .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .card-info h3 { font-size: 0.9rem; }
-            .btn { width: 100%; padding: 5px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -191,14 +172,11 @@
 
     <nav>
         <div class="logo">3D Print<span>Studio</span></div>
-        
         <div class="menu-toggle" onclick="toggleMenu()">
             <i class="fa-solid fa-bars"></i>
         </div>
-
         <ul class="nav-links" id="nav-menu">
             <li><a href="index.html">Domů</a></li>
-            
             <li class="dropdown">
                 <a href="#">Kategorie <i class="fa-solid fa-caret-down" style="margin-left: 5px;"></i></a>
                 <div class="dropdown-content">
@@ -208,14 +186,12 @@
                     <a href="#">📂 Vánoce</a>
                 </div>
             </li>
-
             <li><a href="#kontakt">Kontakt</a></li>
         </ul>
     </nav>
 
     <div class="container">
         <h1 class="page-title">Naše produkty</h1>
-
         <div class="products-grid">
             
             <a href="produkt-mechanicky-dil.html" class="card">
@@ -244,7 +220,6 @@
                     <span class="btn">Detail</span>
                 </div>
             </a>
-
         </div>
     </div>
 
@@ -254,6 +229,5 @@
             menu.classList.toggle("active");
         }
     </script>
-
 </body>
 </html>
