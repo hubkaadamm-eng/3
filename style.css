@@ -3,7 +3,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212; /* Tmavé pozadí */
+    background-color: #121212;
     color: #e0e0e0;
     line-height: 1.6;
 }
@@ -13,8 +13,8 @@ ul { list-style: none; }
 
 :root {
     --primary: #ff6600; /* Oranžová */
-    --dark: #1e1e1e;    /* Pozadí karet/sidebaru */
-    --hover: #2d2d2d;
+    --dark: #1e1e1e;    /* Pozadí karet */
+    --darker: #000000;
 }
 
 /* --- NAVIGACE --- */
@@ -23,165 +23,158 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 15px 5%;
-    background-color: #000;
+    background-color: var(--darker);
     border-bottom: 2px solid var(--primary);
+    flex-wrap: wrap; /* Povolí zalomení na mobilu */
 }
-.logo { font-size: 1.5rem; font-weight: bold; }
+
+.logo { font-size: 1.5rem; font-weight: bold; white-space: nowrap; }
 .color-accent { color: var(--primary); }
+
 .nav-links { display: flex; gap: 20px; }
 .nav-links a:hover { color: var(--primary); }
 
-/* --- HLAVNÍ ROZLOŽENÍ (SIDEBAR + OBSAH) --- */
+/* --- HLAVNÍ ROZLOŽENÍ --- */
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 15px; /* Menší okraje pro mobil */
 }
 
 .main-layout {
     display: grid;
-    /* Tady nastavujeme poměr: levý sloupec 250px, pravý zbytek */
+    /* Desktop: 260px Sidebar, zbytek Produkty */
     grid-template-columns: 260px 1fr; 
     gap: 40px;
     margin-top: 40px;
     margin-bottom: 60px;
-    align-items: start; /* Aby sidebar nezačínal uprostřed */
+    align-items: start;
 }
 
 /* --- LEVÝ SLOUPEC (SIDEBAR) --- */
+.sidebar {
+    background-color: #181818; /* Jemně odlišené pozadí */
+    padding: 15px;
+    border-radius: 8px;
+}
+
 .sidebar h3 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #888;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
     border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-}
-
-.sidebar-menu li {
-    margin-bottom: 8px;
+    padding-bottom: 5px;
 }
 
 .sidebar-menu a {
     display: block;
-    padding: 8px 0;
+    padding: 10px 0;
     color: #ccc;
     font-size: 0.95rem;
-    transition: 0.2s;
     border-bottom: 1px solid #222;
 }
 
 .sidebar-menu a:hover {
     color: var(--primary);
-    padding-left: 5px; /* Efekt posunutí při najetí */
+    padding-left: 5px;
+    transition: 0.2s;
 }
 
-/* Podkategorie (odsazené) */
-.submenu {
-    margin-left: 15px;
-    margin-top: 5px;
-    border-left: 1px solid #333;
-    padding-left: 10px;
-}
-.submenu a { font-size: 0.85rem; border: none; }
+.submenu { margin-left: 15px; border-left: 1px solid #333; padding-left: 10px; }
+.submenu a { font-size: 0.85rem; border: none; padding: 5px 0; }
 
 .sidebar-info {
-    margin-top: 40px;
-    padding: 20px;
-    background-color: var(--dark);
-    border-radius: 5px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #333;
 }
 
 /* --- PRAVÝ SLOUPEC (PRODUKTY) --- */
 .page-title {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 20px;
     color: #fff;
 }
 
 .products-grid {
     display: grid;
-    /* Automatická mřížka - 3 vedle sebe na velkém monitoru */
+    /* Desktop: automaticky vedle sebe */
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-    gap: 25px;
+    gap: 20px;
 }
 
-/* --- KARTA PRODUKTU (Styl E-shop) --- */
+/* --- KARTA PRODUKTU --- */
 .card {
-    background-color: var(--dark); /* Barva karty */
+    background-color: var(--dark);
+    border-radius: 8px;
+    overflow: hidden;
     transition: 0.3s;
     display: flex;
     flex-direction: column;
-    text-align: center; /* Text na střed jako na obrázku */
-    border: 1px solid transparent;
+    border: 1px solid #333;
 }
 
-.card:hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
-}
+.card:hover { border-color: var(--primary); transform: translateY(-3px); }
 
 .card-image img {
     width: 100%;
-    aspect-ratio: 1/1; /* Čtvercový obrázek */
+    aspect-ratio: 1/1;
     object-fit: cover;
 }
 
-.card-info {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    justify-content: space-between;
-}
+.card-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; text-align: center;}
+.card-info h3 { font-size: 1rem; margin-bottom: 5px; color: #fff; font-weight: normal; }
+.price { font-weight: bold; color: #bbb; margin-bottom: 15px; font-size: 0.9rem; }
 
-.card-info h3 {
-    font-size: 1rem;
-    font-weight: normal;
-    margin-bottom: 10px;
-    color: #fff;
-}
-
-.price {
-    font-weight: bold;
-    color: #bbb;
-    margin-bottom: 15px;
-    font-size: 0.9rem;
-}
-
-/* Tlačítko "Výběr možností" */
 .btn-shop {
     background-color: var(--primary);
     color: white;
     padding: 8px;
     font-size: 0.9rem;
     font-weight: bold;
-    border-radius: 3px;
-    display: block;
+    border-radius: 4px;
     margin-top: auto;
-}
-
-.card:hover .btn-shop {
-    background-color: #e65c00;
+    display: block;
 }
 
 /* --- PATIČKA --- */
 footer {
     text-align: center;
     padding: 30px;
-    background-color: #000;
-    margin-top: 50px;
+    background-color: var(--darker);
     border-top: 1px solid #333;
     color: #666;
+    margin-top: 50px;
 }
 
-/* --- MOBILNÍ VERZE --- */
+/* =========================================
+   📱 MOBILNÍ VERZE (RESPONZIVITA)
+   ========================================= */
 @media (max-width: 768px) {
+    
+    /* 1. Navigace - Logo vlevo, odkazy pod ním */
+    nav { flex-direction: column; gap: 10px; }
+    
+    /* 2. Rozložení stránky - Vše pod sebou */
     .main-layout {
-        grid-template-columns: 1fr; /* Pod sebe na mobilu */
+        grid-template-columns: 1fr; /* Pouze jeden sloupec */
+        gap: 20px;
+        margin-top: 20px;
     }
+
+    /* 3. Sidebar (Kategorie) - Bude nahoře a viditelný! */
     .sidebar {
-        display: none; /* Na mobilu sidebar skryjeme pro jednoduchost */
+        order: -1; /* Zajistí, že sidebar bude v kódu první, ale vizuálně taky nahoře */
+        border: 1px solid #333;
+        margin-bottom: 10px;
     }
-}
+    
+    /* Zmenšíme padding v menu, aby to nebylo tak dlouhé */
+    .sidebar-menu a { padding: 8px 0; }
+
+    /* 4. Produkty - DVA vedle sebe (jako na Alze apod.) */
+    .products-grid {
+        grid-template-columns: 1fr 1fr; /* Dva sloupce */
+        gap: 10px; /* Menší mezera
