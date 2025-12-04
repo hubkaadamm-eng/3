@@ -10,7 +10,11 @@
     <style>
         /* --- STYLY (Základ) --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #ddd; }
+        
+        /* PLYNULÉ SKROLOVÁNÍ */
+        html { scroll-behavior: smooth; }
+        
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #ddd; display: flex; flex-direction: column; min-height: 100vh; }
         a { text-decoration: none; color: inherit; cursor: pointer; }
         ul { list-style: none; }
         button { cursor: pointer; font-family: inherit; }
@@ -22,52 +26,35 @@
             height: 70px; 
             padding: 0 20px; 
             display: flex; 
-            align-items: center; /* Zarovnání na střed svisle */
+            align-items: center;
             position: fixed; 
             top: 0; 
             width: 100%; 
             z-index: 1000; 
         }
 
-        /* 1. LOGO - "margin-right: auto" odtlačí zbytek doprava */
-        .logo { 
-            font-size: 1.5rem; 
-            font-weight: bold; 
-            color: #fff; 
-            margin-right: auto; /* TOTO JE TA ZMĚNA PRO ZAROVNÁNÍ */
-        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #fff; margin-right: auto; }
         .logo span { color: #ff6600; }
 
-        /* 2. MENU (Odkazy) */
         .nav-links { display: flex; align-items: center; height: 100%; }
         .nav-links li { height: 100%; display: flex; align-items: center; position: relative; }
-        .nav-links a { padding: 0 15px; color: #ccc; height: 100%; display: flex; align-items: center; font-weight: 500; }
+        .nav-links a { padding: 0 15px; color: #ccc; height: 100%; display: flex; align-items: center; font-weight: 500; transition: 0.3s; }
         .nav-links a:hover { color: #ff6600; background: #1a1a1a; }
 
-        /* 3. PRAVÁ SEKCE (Košík + Burger) */
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-left: 20px; /* Odstup od menu Kontakt */
-        }
-
-        /* Ikonka košíku */
+        .nav-right { display: flex; align-items: center; gap: 20px; margin-left: 20px; }
         .cart-icon-wrap { position: relative; cursor: pointer; color: #fff; display: flex; align-items: center; }
         .cart-icon-wrap i { font-size: 1.4rem; transition: 0.2s; }
         .cart-icon-wrap:hover i { color: #ff6600; }
         .cart-count { position: absolute; top: -8px; right: -8px; background: #ff6600; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.8rem; display: flex; justify-content: center; align-items: center; font-weight: bold; }
-
-        /* Burger menu (na PC skryté) */
         .hamburger-btn { display: none; font-size: 2rem; color: #ff6600; cursor: pointer; }
 
-        /* Podmenu (Kategorie) */
+        /* Podmenu */
         .submenu { display: none; position: absolute; top: 70px; left: 0; background: #1a1a1a; min-width: 220px; border-top: 2px solid #ff6600; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .submenu a { display: block; padding: 15px; border-bottom: 1px solid #333; height: auto; }
         @media (min-width: 769px) { .dropdown:hover .submenu { display: block; } }
 
-        /* Obsah stránky */
-        .container { max-width: 1200px; margin: 100px auto 40px; padding: 0 15px; }
+        /* Obsah */
+        .container { max-width: 1200px; margin: 100px auto 40px; padding: 0 15px; flex: 1; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
         .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
         .card img { width: 100%; height: 200px; object-fit: cover; }
@@ -75,6 +62,25 @@
         .price { color: #ff6600; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
         .btn-buy { background: #ff6600; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; width: 100%; margin-top: auto; cursor: pointer; }
         .btn-buy:hover { background: #e65c00; }
+
+        /* --- PATIČKA (KONTAKT) --- */
+        footer {
+            background-color: #000;
+            border-top: 2px solid #333;
+            padding: 40px 20px;
+            margin-top: auto;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .footer-section h3 { color: #ff6600; margin-bottom: 20px; font-size: 1.2rem; }
+        .footer-section p { margin-bottom: 10px; color: #ccc; line-height: 1.6; }
+        .footer-section i { color: #ff6600; margin-right: 10px; width: 20px; text-align: center; }
+        .copyright { text-align: center; margin-top: 40px; border-top: 1px solid #222; padding-top: 20px; color: #666; font-size: 0.9rem; }
 
         /* --- FORMULÁŘ A KOŠÍK --- */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
@@ -97,27 +103,21 @@
         /* --- MOBILNÍ VERZE --- */
         @media (max-width: 768px) {
             .hamburger-btn { display: block; }
-            
-            /* Logo zůstává vlevo, zbytek se natlačí doprava, to je OK */
-            
-            /* Menu se musí absolutně napozicovat */
             .nav-links { 
-                display: none; 
-                flex-direction: column; 
-                position: absolute; 
-                top: 70px; left: 0; width: 100%; 
-                background: #000; height: auto; 
-                border-bottom: 2px solid #ff6600; 
-                padding-bottom: 20px;
+                display: none; flex-direction: column; position: absolute; 
+                top: 70px; left: 0; width: 100%; background: #000; height: auto; 
+                border-bottom: 2px solid #ff6600; padding-bottom: 20px;
             }
             .nav-links.otevreno { display: flex !important; }
             .nav-links li { width: 100%; display: block; border-bottom: 1px solid #222; }
             .nav-links a { width: 100%; padding: 15px; justify-content: space-between; font-size: 1.1rem; }
-            
             .submenu { display: block !important; position: static; width: 100%; border: none; background: #111; }
             .submenu a { padding-left: 50px; font-size: 0.95rem; color: #888; }
-            
             .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            
+            /* Patička na mobilu */
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer-section i { margin-right: 5px; margin-bottom: 5px; }
         }
     </style>
 </head>
@@ -144,7 +144,6 @@
                 <i class="fa-solid fa-shopping-cart"></i>
                 <span class="cart-count" id="pocet-v-kosiku">0</span>
             </div>
-            
             <div class="hamburger-btn" onclick="ukazHlavniMenu()">
                 <i class="fa-solid fa-bars"></i>
             </div>
@@ -172,6 +171,35 @@
             </div>
         </div>
     </div>
+
+    <footer id="kontakt">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>O nás</h3>
+                <p>Jsme malé 3D tiskové studio zaměřené na kvalitu a detail. Tiskneme z PLA, PETG i ASA materiálů. Realizujeme vaše nápady.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Kontaktní údaje</h3>
+                <p><i class="fa-solid fa-envelope"></i> info@muj3dtisk.cz</p>
+                <p><i class="fa-solid fa-phone"></i> +420 123 456 789</p>
+                <p><i class="fa-solid fa-location-dot"></i> Praha, Česká Republika</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Sledujte nás</h3>
+                <p>Najdete nás na sociálních sítích:</p>
+                <div style="margin-top: 10px;">
+                    <a href="#" style="font-size: 1.5rem; margin-right: 15px;"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="font-size: 1.5rem; margin-right: 15px;"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" style="font-size: 1.5rem;"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 3D Print Studio. Všechna práva vyhrazena.
+        </div>
+    </footer>
 
     <div class="modal-overlay" id="kosikModal">
         <div class="modal-content">
