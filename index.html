@@ -4,90 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Print Studio</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; background: #121212; color: #e0e0e0; }
+        a { text-decoration: none; color: inherit; }
+
+        /* NAVIGACE */
+        nav {
+            background: #000;
+            border-bottom: 2px solid #ff6600;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Důležité: umožní zalomení na mobilu */
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
+        .logo span { color: #ff6600; }
+
+        /* Tlačítko MENU (Hamburger) */
+        .menu-toggle {
+            display: none; /* Na PC skryté */
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #ff6600;
+            border: 1px solid #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        /* Odkazy (Menu) */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        /* --- MOBILNÍ VERZE (ZDE JE OPRAVA) --- */
+        @media (max-width: 768px) {
+            
+            /* 1. Ukázat tlačítko */
+            .menu-toggle {
+                display: block;
+            }
+
+            /* 2. MENU MUSÍ BÝT SKRYTÉ (display: none) */
+            .nav-links {
+                display: none; /* Skryté ve výchozím stavu */
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                margin-top: 15px;
+                background-color: #1a1a1a;
+                padding: 10px;
+            }
+
+            /* 3. TŘÍDA PRO ZOBRAZENÍ (přidá ji JavaScript) */
+            /* Když má menu třídu "ukaz-se", změní se na flex */
+            .nav-links.ukaz-se {
+                display: flex !important; /* !important to vynutí silou */
+            }
+
+            .nav-links li { padding: 10px; border-bottom: 1px solid #333; }
+            
+            /* Rozložení produktů na mobilu */
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { order: -1; }
+            .products-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Zbytek stylů pro produkty (zkráceno pro přehlednost) */
+        .main-layout { max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: 200px 1fr; gap: 20px; padding: 0 10px; }
+        .sidebar { background: #1a1a1a; padding: 10px; }
+        .sidebar a { display: block; padding: 5px; color: #aaa; border-bottom: 1px solid #333; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .card { background: #1e1e1e; padding: 10px; border: 1px solid #333; text-align: center; }
+        .card img { width: 100%; height: 150px; object-fit: cover; }
+        .btn { background: #ff6600; color: white; padding: 5px; display: block; margin-top: 5px; }
+
+    </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">3D Print<span class="color-accent">Studio</span></div>
+        <div class="logo">3D Print<span>Studio</span></div>
         
-        <div class="menu-toggle" onclick="toggleMenu()">
-            <i class="fa-solid fa-bars"></i>
+        <div class="menu-toggle" onclick="prepniMenu()">
+            <i class="fa-solid fa-bars"></i> MENU
         </div>
 
-        <ul class="nav-links" id="nav-menu">
+        <ul class="nav-links" id="mojeMenu">
             <li><a href="index.html">Domů</a></li>
             <li><a href="#galerie">E-shop</a></li>
             <li><a href="#kontakt">Kontakt</a></li>
         </ul>
     </nav>
 
-    <div class="main-layout container">
-        
-        <aside class="sidebar">
+    <div class="main-layout">
+        <div class="sidebar">
             <h3>Kategorie</h3>
-            <ul class="sidebar-menu">
-                <li><a href="#">📂 Dekorace</a></li>
-                <li><a href="#">📂 Flexi zvířátka</a></li>
-                <li><a href="#">📂 Sezónní (Vánoce/Jaro)</a></li>
-                <li><a href="#">📂 Klíčenky</a></li>
-                <li><a href="#">📂 Stojánky</a></li>
-            </ul>
-        </aside>
+            <a href="#">Dekorace</a>
+            <a href="#">Držáky</a>
+            <a href="#">Doplňky</a>
+        </div>
 
-        <main class="content">
-            <h1 class="page-title">Všechny produkty</h1>
-            
-            <div class="products-grid">
-                
-                <a href="produkt-mechanicky-dil.html" class="card">
-                    <div class="card-image">
-                        <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl">
-                    </div>
-                    <div class="card-info">
-                        <h3>Mechanický díl</h3>
-                        <p class="price">250 Kč</p>
-                        <span class="btn-shop">Detail</span>
-                    </div>
-                </a>
-
-                <a href="produkt-drak.html" class="card"> 
-                    <div class="card-image">
-                        <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak">
-                    </div>
-                    <div class="card-info">
-                        <h3>Figurka Draka</h3>
-                        <p class="price">450 Kč</p>
-                        <span class="btn-shop">Detail</span>
-                    </div>
-                </a>
-
-                <a href="produkt-drzak.html" class="card">
-                    <div class="card-image">
-                        <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drzak" alt="Držák">
-                    </div>
-                    <div class="card-info">
-                        <h3>Držák sluchátek</h3>
-                        <p class="price">150 Kč</p>
-                        <span class="btn-shop">Detail</span>
-                    </div>
-                </a>
-
-            </div>
-        </main>
+        <div class="products-grid">
+            <a href="produkt-mechanicky-dil.html" class="card">
+                <img src="https://placehold.co/400" alt="Díl">
+                <h3>Mechanický díl</h3>
+                <p>250 Kč</p>
+                <div class="btn">Detail</div>
+            </a>
+            <a href="produkt-drak.html" class="card">
+                <img src="https://placehold.co/400" alt="Drak">
+                <h3>Drak</h3>
+                <p>450 Kč</p>
+                <div class="btn">Detail</div>
+            </a>
+            <a href="produkt-drzak.html" class="card">
+                <img src="https://placehold.co/400" alt="Držák">
+                <h3>Držák</h3>
+                <p>150 Kč</p>
+                <div class="btn">Detail</div>
+            </a>
+        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2025 3D Print Studio.</p>
-    </footer>
-
     <script>
-        function toggleMenu() {
-            var menu = document.getElementById("nav-menu");
-            // Toto přidá nebo odebere třídu 'active', která menu ukáže/skryje
-            menu.classList.toggle("active");
+        function prepniMenu() {
+            var menu = document.getElementById("mojeMenu");
+            // Toto přidá nebo odebere třídu "ukaz-se"
+            // CSS se pak postará o zbytek
+            menu.classList.toggle("ukaz-se");
         }
     </script>
+
 </body>
 </html>
