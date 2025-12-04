@@ -7,149 +7,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ZÁKLAD --- */
+        /* --- STYLY (Beze změny) --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #ddd; }
         a { text-decoration: none; color: inherit; cursor: pointer; }
         ul { list-style: none; }
         button { cursor: pointer; font-family: inherit; }
 
-        /* --- HORNÍ LIŠTA --- */
-        nav {
-            background: #000;
-            border-bottom: 2px solid #ff6600;
-            height: 70px;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed; /* Lišta bude přilepená nahoře */
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
+        nav { background: #000; border-bottom: 2px solid #ff6600; height: 70px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; width: 100%; z-index: 1000; }
         .nav-left { display: flex; align-items: center; gap: 20px; }
         .logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
         .logo span { color: #ff6600; }
 
-        /* Košík v liště */
-        .cart-icon-wrap {
-            position: relative;
-            cursor: pointer;
-            color: #fff;
-            margin-right: 15px;
-        }
-        .cart-icon-wrap i { font-size: 1.5rem; }
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #ff6600;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 0.8rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-        }
+        .cart-icon-wrap { position: relative; cursor: pointer; color: #fff; margin-right: 15px; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background: #ff6600; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.8rem; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+        .hamburger-btn { display: none; font-size: 2rem; color: #ff6600; cursor: pointer; }
 
-        /* Tlačítko Burger */
-        .hamburger-btn {
-            display: none;
-            font-size: 2rem;
-            color: #ff6600;
-            cursor: pointer;
-        }
-
-        /* --- MENU --- */
         .nav-links { display: flex; align-items: center; height: 100%; }
         .nav-links li { height: 100%; display: flex; align-items: center; position: relative; }
         .nav-links a { padding: 0 15px; color: #ccc; height: 100%; display: flex; align-items: center; }
-        .nav-links a:hover { color: #ff6600; background: #222; }
-
-        /* Podmenu */
-        .submenu {
-            display: none; position: absolute; top: 70px; left: 0;
-            background: #1a1a1a; min-width: 220px; border-top: 2px solid #ff6600;
-        }
+        
+        .submenu { display: none; position: absolute; top: 70px; left: 0; background: #1a1a1a; min-width: 220px; border-top: 2px solid #ff6600; }
         .submenu a { display: block; padding: 15px; border-bottom: 1px solid #333; height: auto; }
         @media (min-width: 769px) { .dropdown:hover .submenu { display: block; } }
 
-        /* --- OBSAH --- */
-        .container { max-width: 1200px; margin: 100px auto 40px; padding: 0 15px; } /* Margin top 100px kvůli fixní liště */
+        .container { max-width: 1200px; margin: 100px auto 40px; padding: 0 15px; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        
-        /* Karta produktu */
         .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
         .card img { width: 100%; height: 200px; object-fit: cover; }
         .card-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
-        .card h3 { margin-bottom: 10px; font-size: 1.1rem; }
         .price { color: #ff6600; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
-        
-        .btn-buy {
-            background: #ff6600; color: white; border: none; padding: 10px; 
-            border-radius: 4px; font-weight: bold; width: 100%; margin-top: auto;
-            transition: 0.2s;
-        }
-        .btn-buy:hover { background: #e65c00; transform: scale(1.02); }
+        .btn-buy { background: #ff6600; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; width: 100%; margin-top: auto; }
 
-        /* --- KOŠÍK (MODÁLNÍ OKNO) --- */
-        .modal-overlay {
-            display: none; /* Skryté */
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 2000;
-            justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: #1a1a1a; width: 90%; max-width: 500px;
-            border-radius: 10px; padding: 20px;
-            border: 1px solid #ff6600;
-            max-height: 90vh; overflow-y: auto;
-            position: relative;
-        }
-        .close-modal {
-            position: absolute; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; color: #888;
-        }
-        .cart-items { margin: 20px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; padding: 10px 0; }
-        .cart-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
-        .cart-total { text-align: right; font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; color: #ff6600; }
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #1a1a1a; width: 90%; max-width: 500px; border-radius: 10px; padding: 20px; border: 1px solid #ff6600; max-height: 90vh; overflow-y: auto; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; color: #888; }
         
-        /* Formulář v košíku */
-        .order-form input, .order-form textarea {
-            width: 100%; padding: 10px; margin-bottom: 10px;
-            background: #333; border: 1px solid #444; color: white; border-radius: 4px;
-        }
-        .btn-order {
-            width: 100%; background: #28a745; color: white; padding: 15px; border: none;
-            font-size: 1.1rem; font-weight: bold; border-radius: 4px; cursor: pointer;
-        }
-        .btn-order:hover { background: #218838; }
+        /* FORMULÁŘ */
+        .order-form input, .order-form textarea { width: 100%; padding: 10px; margin-bottom: 10px; background: #333; border: 1px solid #444; color: white; border-radius: 4px; }
+        .btn-order { width: 100%; background: #28a745; color: white; padding: 15px; border: none; font-size: 1.1rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
         .btn-remove { color: red; cursor: pointer; margin-left: 10px; }
 
-        /* --- MOBILNÍ VERZE --- */
         @media (max-width: 768px) {
             .hamburger-btn { display: block; }
-            .nav-links {
-                display: none; flex-direction: column; position: absolute;
-                top: 70px; left: 0; width: 100%; background: #000; height: auto;
-                border-bottom: 2px solid #ff6600;
-            }
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: #000; border-bottom: 2px solid #ff6600; }
             .nav-links.otevreno { display: flex !important; }
-            .nav-links li { width: 100%; display: block; border-bottom: 1px solid #222; }
+            .nav-links li { width: 100%; display: block; } 
             .nav-links a { width: 100%; padding: 15px; justify-content: space-between; }
-            
-            /* Podmenu mobil */
             .submenu { display: none; position: static; width: 100%; border: none; }
             .submenu.otevreno { display: block !important; }
-            .submenu a { padding-left: 50px; color: #888; }
-            
+            .submenu a { padding-left: 50px; }
             .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .card h3 { font-size: 0.9rem; }
-            .btn-buy { font-size: 0.9rem; padding: 8px; }
         }
     </style>
 </head>
@@ -159,18 +69,15 @@
         <div class="nav-left">
             <div class="logo">3D Print<span>Studio</span></div>
         </div>
-
         <div style="display: flex; align-items: center;">
             <div class="cart-icon-wrap" onclick="otevritKosik()">
                 <i class="fa-solid fa-shopping-cart"></i>
                 <span class="cart-count" id="pocet-v-kosiku">0</span>
             </div>
-
             <div class="hamburger-btn" onclick="ukazHlavniMenu()">
                 <i class="fa-solid fa-bars"></i>
             </div>
         </div>
-
         <ul class="nav-links" id="hlavniMenu">
             <li><a href="#">Domů</a></li>
             <li class="dropdown">
@@ -188,51 +95,30 @@
     <div class="container">
         <h1>E-shop</h1>
         <div class="products-grid">
-            
             <div class="card">
                 <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl">
                 <div class="card-info">
                     <h3>Mechanický díl</h3>
                     <div class="price">250 Kč</div>
-                    <button class="btn-buy" onclick="pridatDoKosiku('Mechanický díl', 250)">
-                        <i class="fa-solid fa-cart-plus"></i> Do košíku
-                    </button>
+                    <button class="btn-buy" onclick="pridatDoKosiku('Mechanický díl', 250)">Do košíku</button>
                 </div>
             </div>
-
             <div class="card">
                 <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak">
                 <div class="card-info">
                     <h3>Drak Rainbow</h3>
                     <div class="price">450 Kč</div>
-                    <button class="btn-buy" onclick="pridatDoKosiku('Drak Rainbow', 450)">
-                        <i class="fa-solid fa-cart-plus"></i> Do košíku
-                    </button>
+                    <button class="btn-buy" onclick="pridatDoKosiku('Drak Rainbow', 450)">Do košíku</button>
                 </div>
             </div>
-
-            <div class="card">
+             <div class="card">
                 <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drzak" alt="Držák">
                 <div class="card-info">
                     <h3>Držák sluchátek</h3>
                     <div class="price">150 Kč</div>
-                    <button class="btn-buy" onclick="pridatDoKosiku('Držák sluchátek', 150)">
-                        <i class="fa-solid fa-cart-plus"></i> Do košíku
-                    </button>
+                    <button class="btn-buy" onclick="pridatDoKosiku('Držák sluchátek', 150)">Do košíku</button>
                 </div>
             </div>
-
-             <div class="card">
-                <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Vaza" alt="Váza">
-                <div class="card-info">
-                    <h3>Designová Váza</h3>
-                    <div class="price">300 Kč</div>
-                    <button class="btn-buy" onclick="pridatDoKosiku('Designová Váza', 300)">
-                        <i class="fa-solid fa-cart-plus"></i> Do košíku
-                    </button>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -240,131 +126,81 @@
         <div class="modal-content">
             <span class="close-modal" onclick="zavritKosik()">&times;</span>
             <h2>Váš košík</h2>
-            
-            <div class="cart-items" id="seznam-zbozi">
-                <p>Košík je prázdný.</p>
+            <div class="cart-items" id="seznam-zbozi"><p>Prázdno</p></div>
+            <div class="cart-total" style="text-align:right; font-weight:bold; margin-bottom:10px;">
+                Celkem: <span id="celkova-cena">0</span> Kč
             </div>
 
-            <div class="cart-total">Celkem: <span id="celkova-cena">0</span> Kč</div>
-
-            <h3>Dodací údaje</h3>
-            <form class="order-form" onsubmit="odeslatObjednavku(event)">
-                <input type="text" id="jmeno" placeholder="Vaše Jméno a Příjmení" required>
-                <input type="email" id="email" placeholder="Váš Email" required>
-                <input type="text" id="adresa" placeholder="Adresa / Pobočka Zásilkovny" required>
-                <textarea id="poznamka" rows="2" placeholder="Poznámka (barva, velikost...)"></textarea>
+            <form class="order-form" action="https://formspree.io/f/xrbnlple" method="POST" onsubmit="pripravitData()">
                 
-                <button type="submit" class="btn-order">ODESLAT OBJEDNÁVKU</button>
-                <p style="font-size:0.8rem; color:#888; margin-top:10px; text-align:center;">
-                    Kliknutím se vytvoří e-mail ve vašem prohlížeči.
-                </p>
+                <input type="hidden" name="OBSAH_KOŠÍKU" id="hidden-cart-content">
+                
+                <input type="text" name="Jméno" placeholder="Vaše Jméno" required>
+                <input type="email" name="Email" placeholder="Váš Email" required>
+                <input type="text" name="Adresa" placeholder="Adresa / Zásilkovna" required>
+                <textarea name="Poznámka" rows="2" placeholder="Poznámka"></textarea>
+                
+                <button type="submit" class="btn-order">ZÁVAZNĚ OBJEDNAT</button>
             </form>
         </div>
     </div>
 
     <script>
-        // --- 1. OVLÁDÁNÍ MENU (Mobil) ---
-        function ukazHlavniMenu() {
-            document.getElementById("hlavniMenu").classList.toggle("otevreno");
-        }
-        function ukazPodMenu() {
-            document.getElementById("podMenu").classList.toggle("otevreno");
-        }
+        // MENU
+        function ukazHlavniMenu() { document.getElementById("hlavniMenu").classList.toggle("otevreno"); }
+        function ukazPodMenu() { document.getElementById("podMenu").classList.toggle("otevreno"); }
 
-        // --- 2. LOGIKA KOŠÍKU ---
-        let kosik = []; // Tady se ukládá zboží
+        // KOŠÍK LOGIKA
+        let kosik = [];
 
         function pridatDoKosiku(nazev, cena) {
-            // Přidáme zboží do pole
             kosik.push({ nazev: nazev, cena: cena });
             aktualizovatKosik();
-            // Malý efekt - alert
-            alert(nazev + " byl přidán do košíku.");
+            alert("Přidáno: " + nazev);
         }
 
         function smazatZKosiku(index) {
-            kosik.splice(index, 1); // Vymaže položku na konkrétní pozici
+            kosik.splice(index, 1);
             aktualizovatKosik();
         }
 
         function aktualizovatKosik() {
-            // 1. Aktualizovat číslo u ikonky
             document.getElementById("pocet-v-kosiku").innerText = kosik.length;
-
-            // 2. Vypsat seznam v okně
-            let seznamDiv = document.getElementById("seznam-zbozi");
-            let celkemSpan = document.getElementById("celkova-cena");
+            let div = document.getElementById("seznam-zbozi");
+            let total = 0;
+            div.innerHTML = "";
             
-            seznamDiv.innerHTML = ""; // Vyčistit starý seznam
-            let celkovaCena = 0;
-
-            if (kosik.length === 0) {
-                seznamDiv.innerHTML = "<p>Košík je prázdný.</p>";
-            } else {
-                kosik.forEach((polozka, index) => {
-                    celkovaCena += polozka.cena;
-                    seznamDiv.innerHTML += `
-                        <div class="cart-item">
-                            <span>${polozka.nazev}</span>
-                            <span>
-                                ${polozka.cena} Kč 
-                                <span class="btn-remove" onclick="smazatZKosiku(${index})"><i class="fa-solid fa-trash"></i></span>
-                            </span>
-                        </div>
-                    `;
-                });
-            }
-            celkemSpan.innerText = celkovaCena;
+            if(kosik.length === 0) div.innerHTML = "<p>Prázdno</p>";
+            
+            kosik.forEach((p, i) => {
+                total += p.cena;
+                div.innerHTML += `<div class="cart-item">${p.nazev} - ${p.cena} Kč <i class="fa-solid fa-trash btn-remove" onclick="smazatZKosiku(${i})"></i></div>`;
+            });
+            document.getElementById("celkova-cena").innerText = total;
         }
 
-        // --- 3. OVLÁDÁNÍ OKNA ---
-        function otevritKosik() {
-            document.getElementById("kosikModal").style.display = "flex";
-        }
-        function zavritKosik() {
-            document.getElementById("kosikModal").style.display = "none";
-        }
-
-        // --- 4. ODESLÁNÍ EMAILEM ---
-        function odeslatObjednavku(event) {
-            event.preventDefault(); // Aby se stránka nenačetla znovu
-
-            if (kosik.length === 0) {
+        // FUNKCE PRO FORMSPREE (Přenese košík do skrytého pole)
+        function pripravitData() {
+            if(kosik.length === 0) {
                 alert("Košík je prázdný!");
+                event.preventDefault(); // Zastaví odeslání
                 return;
             }
-
-            let jmeno = document.getElementById("jmeno").value;
-            let email = document.getElementById("email").value;
-            let adresa = document.getElementById("adresa").value;
-            let poznamka = document.getElementById("poznamka").value;
-
-            // Vytvoření textu objednávky
-            let textObjednavky = "Dobrý den,\nchtěl bych si objednat:\n\n";
+            // Převede pole košíku na text a vloží ho do skrytého inputu
+            let textKosiku = "";
             let celkem = 0;
-            
             kosik.forEach(p => {
-                textObjednavky += "- " + p.nazev + " (" + p.cena + " Kč)\n";
+                textKosiku += p.nazev + " (" + p.cena + " Kč)\n";
                 celkem += p.cena;
             });
-
-            textObjednavky += "\nCELKEM: " + celkem + " Kč\n";
-            textObjednavky += "\n--- ÚDAJE ZÁKAZNÍKA ---";
-            textObjednavky += "\nJméno: " + jmeno;
-            textObjednavky += "\nEmail: " + email;
-            textObjednavky += "\nAdresa/Zásilkovna: " + adresa;
-            textObjednavky += "\nPoznámka: " + poznamka;
-
-            // Vytvoření mailto odkazu (otevře emailového klienta)
-            // ZMĚŇTE "vas-email@example.com" NA SVŮJ EMAIL!
-            let mujEmail = "hubka.adamm@gmail.com"; 
-            let predmet = "Nová objednávka od " + jmeno;
-            let odkaz = "mailto:" + mujEmail + "?subject=" + encodeURIComponent(predmet) + "&body=" + encodeURIComponent(textObjednavky);
-
-            // Otevřít
-            window.location.href = odkaz;
+            textKosiku += "\nCELKEM K ÚHRADĚ: " + celkem + " Kč";
+            
+            document.getElementById("hidden-cart-content").value = textKosiku;
         }
-    </script>
 
+        // MODAL
+        function otevritKosik() { document.getElementById("kosikModal").style.display = "flex"; }
+        function zavritKosik() { document.getElementById("kosikModal").style.display = "none"; }
+    </script>
 </body>
 </html>
