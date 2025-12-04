@@ -1,214 +1,129 @@
-<!DOCTYPE html>
-<html lang="cs">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Print Studio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* --- CSS --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: sans-serif; background: #121212; color: #e0e0e0; }
-        a { text-decoration: none; color: inherit; }
+/* --- 1. ZÁKLADNÍ NASTAVENÍ --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
 
-        /* NAVIGACE */
-        nav {
-            background: #000;
-            border-bottom: 2px solid #ff6600;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap; /* Důležité: umožní zalomení na mobilu */
-        }
+/* --- 2. NAVIGACE (LIŠTA) --- */
+nav {
+    background: #000;
+    border-bottom: 2px solid #ff6600;
+    height: 70px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1000;
+}
 
-        .logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
-        .logo span { color: #ff6600; }
+.logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
+.logo span { color: #ff6600; }
 
-        /* Tlačítko MENU (Hamburger) */
-        .menu-toggle {
-            display: none; /* Na PC skryté */
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #ff6600;
-            border: 1px solid #333;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
+/* Tlačítko MENU (na PC skryté) */
+.menu-toggle {
+    display: none;
+    font-size: 1.8rem;
+    color: #ff6600;
+    cursor: pointer;
+}
 
-        /* Odkazy (Menu) */
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-        }
+/* Hlavní odkazy */
+.nav-links {
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+
+.nav-links > li {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative; /* Důležité pro roletku */
+}
+
+.nav-links > li > a {
+    padding: 0 20px;
+    color: #ccc;
+    font-weight: 500;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.nav-links > li > a:hover {
+    color: #ff6600;
+    background: #1a1a1a;
+}
+
+/* --- 3. ROZBALOVACÍ MENU (DROPDOWN) - PC VERZE --- */
+.dropdown-content {
+    display: none; /* Skryté */
+    position: absolute;
+    top: 70px; /* Hned pod lištou */
+    left: 0;
+    background-color: #1a1a1a;
+    min-width: 220px;
+    border-top: 2px solid #ff6600;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 15px 20px;
+    border-bottom: 1px solid #333;
+    color: #bbb;
+}
+
+.dropdown-content a:hover {
+    background: #252525;
+    color: #fff;
+}
+
+/* Když na PC najedu myší na .dropdown, ukaž .dropdown-content */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* --- 4. OBSAH STRÁNKY --- */
+.container { max-width: 1200px; margin: 40px auto; padding: 0 15px; }
+.page-title { text-align: center; margin-bottom: 30px; font-size: 2rem; color: #fff; }
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+/* Karta */
+.card {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.card-image img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+.card-info { padding: 15px; text-align: center; }
+.price { font-weight: bold; color: #bbb; display: block; margin: 10px 0; }
+.btn { background: #ff6600; color: white; padding: 8px 15px; border-radius: 4px; display: inline-block; }
+
 
 /* =========================================
-   📱 MOBILNÍ VERZE (OPRAVENÁ)
+   📱 MOBILNÍ VERZE (ZDE BYL PROBLÉM)
    ========================================= */
 @media (max-width: 768px) {
     
-    /* 1. Tlačítko MENU viditelné */
+    /* 1. Ukázat tlačítko */
     .menu-toggle { display: block; }
 
-    /* 2. Hlavní menu skryté, dokud se neklikne */
+    /* 2. Menu nastavit jako vyjížděcí panel */
     .nav-links {
         display: none; /* Skryté */
         flex-direction: column;
         position: absolute;
         top: 70px;
         left: 0;
-        width: 100%;
-        background: #000;
-        height: auto;
-        border-bottom: 2px solid #ff6600;
-        padding-bottom: 20px;
-    }
-
-    /* 3. Třída pro zobrazení (JS ji přidá) */
-    .nav-links.active {
-        display: flex !important;
-    }
-
-    .nav-links li {
-        width: 100%;
-        display: block;
-        height: auto;
-        border-bottom: 1px solid #222;
-    }
-
-    .nav-links a {
-        padding: 15px 20px;
-        width: 100%;
-        font-size: 1.1rem; /* Větší písmo pro prsty */
-    }
-
-    /* --- OPRAVA KATEGORIÍ PRO MOBIL --- */
-    /* Na mobilu zrušíme vyskakovací okno a dáme to přímo do seznamu */
-    .dropdown-content {
-        display: block !important; /* !important to VYNUTÍ */
-        position: static; /* Už neplave ve vzduchu */
-        background: #111; /* Mírně světlejší pozadí než hlavní menu */
-        border: none;
-        box-shadow: none;
-        width: 100%;
-        padding-left: 0;
-    }
-    
-    /* Odkazy v podmenu (Kategorie) */
-    .dropdown-content a {
-        padding-left: 40px; /* Odsazení doprava (schod) */
-        font-size: 0.95rem; /* Menší písmo */
-        color: #888;
-        border-bottom: 1px solid #222;
-    }
-
-    .dropdown-content a:hover {
-        color: #fff;
-    }
-    
-    /* Skryjeme šipku dolů na mobilu, ať neplete */
-    .fa-caret-down {
-        display: none;
-    }
-
-    /* Produkty: 2 vedle sebe */
-    .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .card-info h3 { font-size: 0.9rem; }
-    .btn { width: 100%; padding: 5px; font-size: 0.9rem; }
-}
-
-            /* 2. MENU MUSÍ BÝT SKRYTÉ (display: none) */
-            .nav-links {
-                display: none; /* Skryté ve výchozím stavu */
-                width: 100%;
-                flex-direction: column;
-                text-align: center;
-                margin-top: 15px;
-                background-color: #1a1a1a;
-                padding: 10px;
-            }
-
-            /* 3. TŘÍDA PRO ZOBRAZENÍ (přidá ji JavaScript) */
-            /* Když má menu třídu "ukaz-se", změní se na flex */
-            .nav-links.ukaz-se {
-                display: flex !important; /* !important to vynutí silou */
-            }
-
-            .nav-links li { padding: 10px; border-bottom: 1px solid #333; }
-            
-            /* Rozložení produktů na mobilu */
-            .main-layout { grid-template-columns: 1fr; }
-            .sidebar { order: -1; }
-            .products-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        /* Zbytek stylů pro produkty (zkráceno pro přehlednost) */
-        .main-layout { max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: 200px 1fr; gap: 20px; padding: 0 10px; }
-        .sidebar { background: #1a1a1a; padding: 10px; }
-        .sidebar a { display: block; padding: 5px; color: #aaa; border-bottom: 1px solid #333; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        .card { background: #1e1e1e; padding: 10px; border: 1px solid #333; text-align: center; }
-        .card img { width: 100%; height: 150px; object-fit: cover; }
-        .btn { background: #ff6600; color: white; padding: 5px; display: block; margin-top: 5px; }
-
-    </style>
-</head>
-<body>
-
-    <nav>
-        <div class="logo">3D Print<span>Studio</span></div>
-        
-        <div class="menu-toggle" onclick="prepniMenu()">
-            <i class="fa-solid fa-bars"></i> MENU
-        </div>
-
-        <ul class="nav-links" id="mojeMenu">
-            <li><a href="index.html">Domů</a></li>
-            <li><a href="#galerie">E-shop</a></li>
-            <li><a href="#kontakt">Kontakt</a></li>
-        </ul>
-    </nav>
-
-    <div class="main-layout">
-        <div class="sidebar">
-            <h3>Kategorie</h3>
-            <a href="#">Dekorace</a>
-            <a href="#">Držáky</a>
-            <a href="#">Doplňky</a>
-        </div>
-
-        <div class="products-grid">
-            <a href="produkt-mechanicky-dil.html" class="card">
-                <img src="https://placehold.co/400" alt="Díl">
-                <h3>Mechanický díl</h3>
-                <p>250 Kč</p>
-                <div class="btn">Detail</div>
-            </a>
-            <a href="produkt-drak.html" class="card">
-                <img src="https://placehold.co/400" alt="Drak">
-                <h3>Drak</h3>
-                <p>450 Kč</p>
-                <div class="btn">Detail</div>
-            </a>
-            <a href="produkt-drzak.html" class="card">
-                <img src="https://placehold.co/400" alt="Držák">
-                <h3>Držák</h3>
-                <p>150 Kč</p>
-                <div class="btn">Detail</div>
-            </a>
-        </div>
-    </div>
-
-    <script>
-        function prepniMenu() {
-            var menu = document.getElementById("mojeMenu");
-            // Toto přidá nebo odebere třídu "ukaz-se"
-            // CSS se pak postará o zbytek
-            menu.classList.toggle("ukaz-se");
-        }
-    </script>
-
-</body>
-</html>
+        width:
