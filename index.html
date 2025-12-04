@@ -103,5 +103,29 @@
         <p>&copy; 2025 3D Print Studio.</p>
     </footer>
 
+  <nav>
+    <div class="logo">3D Print<span class="color-accent">Studio</span></div>
+    
+    <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <ul class="nav-links" id="nav-menu">
+        <li><a href="index.html">Domů</a></li>
+        <li><a href="#galerie">E-shop</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+</nav>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("nav-menu");
+        menu.classList.toggle("active");
+    }
+</script>
 </body>
+</html>  
+
+</body>
+
 </html>
