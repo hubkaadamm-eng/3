@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ZÁKLADNÍ STYLY --- */
+        /* --- 1. ZÁKLAD --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; }
-        a { text-decoration: none; color: inherit; }
+        body { font-family: sans-serif; background: #121212; color: #ddd; }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
         ul { list-style: none; }
 
-        /* --- NAVIGACE (LIŠTA) --- */
+        /* --- 2. HORNÍ LIŠTA --- */
         nav {
             background: #000;
             border-bottom: 2px solid #ff6600;
@@ -29,105 +29,76 @@
         .logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
         .logo span { color: #ff6600; }
 
-        .menu-toggle {
-            display: none; 
-            font-size: 1.8rem;
+        /* Tlačítko (3 čárky) - Viditelné jen na mobilu */
+        .hamburger-btn {
+            display: none; /* Na PC skryté */
+            font-size: 2rem;
             color: #ff6600;
             cursor: pointer;
+            padding: 10px; /* Větší plocha pro kliknutí */
         }
 
-        /* Hlavní odkazy */
+        /* --- 3. HLAVNÍ MENU --- */
         .nav-links {
             display: flex;
-            height: 100%;
             align-items: center;
+            height: 100%;
         }
 
-        .nav-links > li {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        /* Styl odkazů */
-        .nav-links > li > a {
+        .nav-links li { position: relative; height: 100%; display: flex; align-items: center; }
+        
+        .nav-links a {
             padding: 0 20px;
             color: #ccc;
-            font-weight: 500;
             height: 100%;
             display: flex;
             align-items: center;
-            transition: 0.3s;
-            cursor: pointer; /* Aby bylo jasné, že se na to dá kliknout */
         }
+        .nav-links a:hover { color: #ff6600; background: #222; }
 
-        .nav-links > li > a:hover {
-            color: #ff6600;
-            background: #1a1a1a;
-        }
-
-        /* --- ROZBALOVACÍ MENU (PODKATEGORIE) --- */
-        .dropdown-content {
-            display: none; /* Ve výchozím stavu skryté */
+        /* --- 4. PODMENU (KATEGORIE) --- */
+        .submenu {
+            display: none; /* Skryté */
             position: absolute;
             top: 70px;
             left: 0;
-            background-color: #1a1a1a;
+            background: #1a1a1a;
             min-width: 220px;
             border-top: 2px solid #ff6600;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
 
-        .dropdown-content a {
+        .submenu a {
             display: block;
-            padding: 15px 20px;
+            padding: 15px;
             border-bottom: 1px solid #333;
-            color: #bbb;
-            height: auto !important;
+            height: auto;
         }
 
-        /* PC: Když najedu myší, ukaž menu */
+        /* Na PC se zobrazí při najetí myši */
         @media (min-width: 769px) {
-            .dropdown:hover .dropdown-content {
-                display: block;
-            }
+            .dropdown:hover .submenu { display: block; }
         }
 
-        /* --- OBSAH --- */
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 15px; }
-        .page-title { text-align: center; margin-bottom: 30px; font-size: 2rem; color: #fff; }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        .card-image img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .card-info { padding: 15px; text-align: center; }
-        .price { font-weight: bold; color: #bbb; display: block; margin: 10px 0; }
-        .btn { background: #ff6600; color: white; padding: 8px 15px; border-radius: 4px; display: inline-block; }
+        /* --- 5. OBSAH WEBU --- */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; text-align: center; }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-info { padding: 15px; }
+        .btn { background: #ff6600; color: white; padding: 8px 15px; border-radius: 4px; display: inline-block; margin-top: 10px; }
 
 
         /* =========================================
-           📱 MOBILNÍ VERZE
+           📱 MOBILNÍ VERZE (ZDE JE OPRAVA)
            ========================================= */
         @media (max-width: 768px) {
             
-            .menu-toggle { display: block; }
+            /* 1. Ukázat tlačítko */
+            .hamburger-btn { display: block; }
 
-            /* Hlavní menu (skryté) */
+            /* 2. Menu skryté */
             .nav-links {
-                display: none; 
+                display: none; /* Skryté */
                 flex-direction: column;
                 position: absolute;
                 top: 70px;
@@ -136,50 +107,33 @@
                 background: #000;
                 height: auto;
                 border-bottom: 2px solid #ff6600;
-                padding-bottom: 20px;
             }
 
-            /* Třída pro zobrazení hlavního menu */
-            .nav-links.active {
+            /* 3. Třída "otevreno" (přidá JS) - Zobrazí menu */
+            .nav-links.otevreno {
                 display: flex !important;
             }
 
-            .nav-links > li {
-                width: 100%;
-                display: block;
-                height: auto;
-                border-bottom: 1px solid #222;
-            }
+            .nav-links li { width: 100%; display: block; border-bottom: 1px solid #222; }
+            .nav-links a { width: 100%; padding: 15px; font-size: 1.2rem; justify-content: space-between; }
 
-            .nav-links > li > a {
-                width: 100%;
-                padding: 15px;
-                font-size: 1.1rem;
-                justify-content: space-between; /* Aby šipka byla vpravo */
-            }
-
-            /* --- PODKATEGORIE NA MOBILU --- */
-            .dropdown-content {
-                display: none; /* I na mobilu SKRYTÉ, dokud nekliknu */
+            /* 4. Podmenu (Kategorie) na mobilu */
+            .submenu {
+                display: none; /* Skryté i v otevřeném menu */
                 position: static; /* Součást seznamu */
                 background: #111;
                 border: none;
-                box-shadow: none;
                 width: 100%;
             }
 
-            /* Třída pro zobrazení podkategorií (přidá JS) */
-            .dropdown-content.show-submenu {
+            /* Třída "otevreno" pro podmenu */
+            .submenu.otevreno {
                 display: block !important;
             }
-            
-            .dropdown-content a {
-                padding-left: 50px; 
-                font-size: 0.95rem;
-                color: #888;
-                border-bottom: 1px solid #222;
-            }
 
+            .submenu a { padding-left: 50px; color: #888; font-size: 1rem; }
+            
+            /* Produkty na mobilu */
             .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
         }
     </style>
@@ -189,17 +143,17 @@
     <nav>
         <div class="logo">3D Print<span>Studio</span></div>
         
-        <div class="menu-toggle" onclick="toggleMenu()">
+        <div class="hamburger-btn" onclick="ukazHlavniMenu()">
             <i class="fa-solid fa-bars"></i>
         </div>
 
-        <ul class="nav-links" id="nav-menu">
+        <ul class="nav-links" id="hlavniMenu">
             <li><a href="index.html">Domů</a></li>
             
             <li class="dropdown">
-                <a onclick="toggleSubmenu()">Kategorie <i class="fa-solid fa-chevron-down"></i></a>
+                <a onclick="ukazPodMenu()">Kategorie <i class="fa-solid fa-chevron-down"></i></a>
                 
-                <div class="dropdown-content" id="mySubmenu">
+                <div class="submenu" id="podMenu">
                     <a href="#">📂 Dekorace</a>
                     <a href="#">📂 Flexi zvířátka</a>
                     <a href="#">📂 Držáky</a>
@@ -212,46 +166,58 @@
     </nav>
 
     <div class="container">
-        <h1 class="page-title">Naše produkty</h1>
+        <h1>Naše produkty</h1>
         <div class="products-grid">
-            
             <a href="produkt-mechanicky-dil.html" class="card">
-                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl"></div>
+                <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl">
                 <div class="card-info">
                     <h3>Mechanický díl</h3>
-                    <p class="price">250 Kč</p>
+                    <p>250 Kč</p>
                     <span class="btn">Detail</span>
                 </div>
             </a>
-
             <a href="produkt-drak.html" class="card">
-                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak"></div>
+                <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak">
                 <div class="card-info">
                     <h3>Drak</h3>
-                    <p class="price">450 Kč</p>
+                    <p>450 Kč</p>
                     <span class="btn">Detail</span>
                 </div>
             </a>
-            
              <a href="produkt-drzak.html" class="card">
-                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drzak" alt="Držák"></div>
+                <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drzak" alt="Držák">
                 <div class="card-info">
                     <h3>Držák</h3>
-                    <p class="price">150 Kč</p>
+                    <p>150 Kč</p>
                     <span class="btn">Detail</span>
                 </div>
             </a>
-
         </div>
     </div>
 
     <script>
-        // Funkce 1: Otevře/Zavře hlavní menu (3 čárky)
-        function toggleMenu() {
-            var menu = document.getElementById("nav-menu");
-            menu.classList.toggle("active");
+        // Funkce 1: Otevře/Zavře hlavní černé menu
+        function ukazHlavniMenu() {
+            var menu = document.getElementById("hlavniMenu");
+            // Přepne třídu 'otevreno'
+            if (menu.classList.contains("otevreno")) {
+                menu.classList.remove("otevreno");
+            } else {
+                menu.classList.add("otevreno");
+            }
         }
 
-        // Funkce 2: Otevře/Zavře podkategorie (Když kliknu na "Kategorie")
-        function toggleSubmenu() {
-            // Najdeme to podmenu podle ID
+        // Funkce 2: Otevře/Zavře kategorie
+        function ukazPodMenu() {
+            var podmenu = document.getElementById("podMenu");
+            // Přepne třídu 'otevreno'
+            if (podmenu.classList.contains("otevreno")) {
+                podmenu.classList.remove("otevreno");
+            } else {
+                podmenu.classList.add("otevreno");
+            }
+        }
+    </script>
+
+</body>
+</html>
