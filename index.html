@@ -22,7 +22,8 @@
         nav { 
             background: #000; 
             border-bottom: 2px solid #ff6600; 
-            height: 70px; 
+            /* ZVĚTŠENO NA 80px, ABY SE TEXT NEUŘEZÁVAL */
+            height: 80px; 
             padding: 0 20px; 
             display: flex; 
             align-items: center; 
@@ -53,8 +54,7 @@
             align-items: center; 
             font-weight: 500; 
             transition: 0.3s;
-            /* ZDE JE OPRAVA ŠIPKY: */
-            gap: 8px; /* Přidá mezeru mezi text a ikonku */
+            gap: 8px; /* Mezera mezi textem a šipkou */
         }
         .nav-links > li > a:hover { color: #ff6600; background: #1a1a1a; }
 
@@ -62,7 +62,8 @@
         .submenu { 
             display: none; 
             position: absolute; 
-            top: 70px; 
+            /* POSUNUTO NÍŽE KVŮLI VYŠŠÍ LIŠTĚ (80px) */
+            top: 80px; 
             left: 0; 
             background: #1a1a1a; 
             min-width: 220px; 
@@ -87,7 +88,9 @@
         .hamburger-btn { display: none; font-size: 2rem; color: #ff6600; cursor: pointer; }
 
         /* Obsah */
-        .container { max-width: 1200px; margin: 100px auto 40px; padding: 0 15px; flex: 1; }
+        /* POSUNUTO NÍŽE (120px), ABY SE OBSAH NESCHOVÁVAL POD LIŠTU */
+        .container { max-width: 1200px; margin: 120px auto 40px; padding: 0 15px; flex: 1; }
+        
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
         .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
         .card img { width: 100%; height: 200px; object-fit: cover; }
@@ -127,7 +130,9 @@
             
             .nav-links { 
                 display: none; flex-direction: column; position: absolute; 
-                top: 70px; left: 0; width: 100%; background: #000; height: auto; 
+                /* POSUNUTO NÍŽE, ABY MENU NEBYLO POD LIŠTOU */
+                top: 80px; 
+                left: 0; width: 100%; background: #000; height: auto; 
                 border-bottom: 2px solid #ff6600; padding-bottom: 20px;
             }
             .nav-links.otevreno { display: flex !important; }
