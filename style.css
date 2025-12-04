@@ -25,7 +25,68 @@ nav {
     padding: 15px 5%;
     background-color: var(--darker);
     border-bottom: 2px solid var(--primary);
-    flex-wrap: wrap; /* Povolí zalomení na mobilu */
+    position: relative; /* Důležité pro pozicování */
+    flex-wrap: wrap; /* Aby se menu mohlo zalomit pod logo */
+}
+
+.logo { font-size: 1.5rem; font-weight: bold; }
+
+/* Tlačítko menu - na počítači je skryté */
+.menu-toggle {
+    display: none; 
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+}
+
+.nav-links { display: flex; gap: 20px; }
+.nav-links a:hover { color: var(--primary); }
+
+/* ... Zbytek CSS (layout, sidebar, karty) nechte stejný ... */
+
+
+/* =========================================
+   📱 MOBILNÍ VERZE - ÚPRAVA MENU
+   ========================================= */
+@media (max-width: 768px) {
+    
+    /* Zobrazíme tlačítko menu */
+    .menu-toggle {
+        display: block; 
+    }
+
+    /* Skryjeme odkazy (výchozí stav) */
+    .nav-links {
+        display: none; /* Skryté */
+        width: 100%;   /* Roztažené na celou šířku */
+        flex-direction: column; /* Pod sebou */
+        text-align: center;
+        padding-top: 20px;
+        border-top: 1px solid #333;
+        margin-top: 15px;
+    }
+
+    /* Třída .active se přidá JavaScriptem, když kliknete */
+    .nav-links.active {
+        display: flex; /* Zobrazí se */
+    }
+
+    .nav-links li {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    .nav-links a {
+        display: block;
+        padding: 10px;
+        background-color: #1a1a1a; /* Jemné pozadí tlačítka */
+        border-radius: 5px;
+    }
+
+    /* Zbytek mobilního nastavení z minula (sidebar, grid) */
+    .main-layout { grid-template-columns: 1fr; }
+    .sidebar { order: -1; margin-bottom: 10px; }
+    .products-grid { grid-template-columns: 1fr 1fr; }
 }
 
 .logo { font-size: 1.5rem; font-weight: bold; white-space: nowrap; }
@@ -178,3 +239,4 @@ footer {
     .products-grid {
         grid-template-columns: 1fr 1fr; /* Dva sloupce */
         gap: 10px; /* Menší mezera
+
