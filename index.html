@@ -4,8 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Print Studio</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           1. ZÁKLADNÍ STYLY (Pro všechny)
+           ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* =========================================
+           2. NAVIGACE (Počítač)
+           ========================================= */
+        nav {
+            background: #000;
+            border-bottom: 2px solid #ff6600;
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
+        .logo span { color: #ff6600; }
+
+        /* Tlačítko MENU (na PC skryté) */
+        .menu-toggle {
+            display: none; 
+            font-size: 1.8rem;
+            color: #ff6600;
+            cursor: pointer;
+        }
+
+        /* Hlavní menu */
+        .nav-links {
+            display: flex;
+            height: 100%;
+            align-items: center;
+        }
+
+        .nav-links > li {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-links > li > a {
+            padding: 0 20px;
+            color: #ccc;
+            font-weight: 500;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .nav-links > li > a:hover {
+            color: #ff6600;
+            background: #1a1a1a;
+        }
+
+        /* --- Rozbalovací menu (Kategorie) --- */
+        .dropdown-content {
+            display: none; /* Skryté */
+            position: absolute;
+            top: 70px;
+            left: 0;
+            background-color: #1a1a1a;
+            min-width: 220px;
+            border-top: 2px solid #ff6600;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 15px 20px;
+            border-bottom: 1px solid #333;
+            color: #bbb;
+            height: auto !important; /* Oprava výšky */
+        }
+
+        /* Na PC: Ukaž menu při najetí myši */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* =========================================
+           3. OBSAH (Produkty)
+           ========================================= */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 15px; }
+        .page-title { text-align: center; margin-bottom: 30px; font-size: 2rem; color: #fff; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-image img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .card-info { padding: 15px; text-align: center; }
+        .price { font-weight: bold; color: #bbb; display: block; margin: 10px 0; }
+        .btn { background: #ff6600; color: white; padding: 8px 15px; border-radius: 4px; display: inline-block; }
+
+
+        /* =========================================
+           4. MOBILNÍ VERZE (OPRAVENO)
+           ========================================= */
+        @media (max-width: 768px) {
+            
+            /* Ukázat tlačítko */
+            .menu-toggle { display: block; }
+
+            /* Skrýt menu a nastavit ho pod sebe */
+            .nav-links {
+                display: none; 
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: #000;
+                height: auto;
+                border-bottom: 2px solid #ff6600;
+                padding-bottom: 20px;
+            }
+
+            /* Třída pro zobrazení (přes JS) */
+            .nav-links.active {
+                display: flex !important;
+            }
+
+            .nav-links > li {
+                width: 100%;
+                display: block;
+                height: auto;
+                border-bottom: 1px solid #222;
+            }
+
+            .nav-links > li > a {
+                width: 100%;
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+
+            /* --- KATEGORIE NA MOBILU --- */
+            /* Vynutit zobrazení podkategorií */
+            .dropdown-content {
+                display: block !important; 
+                position: static;
+                background: #111;
+                border: none;
+                box-shadow: none;
+                width: 100%;
+            }
+            
+            /* Odsazení kategorií doprava */
+            .dropdown-content a {
+                padding-left: 50px; 
+                font-size: 0.95rem;
+                color: #888;
+                border-bottom: 1px solid #222;
+            }
+
+            /* Produkty: 2 vedle sebe */
+            .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .card-info h3 { font-size: 0.9rem; }
+            .btn { width: 100%; padding: 5px; font-size: 0.9rem; }
+        }
+    </style>
 </head>
 <body>
 
@@ -39,9 +219,7 @@
         <div class="products-grid">
             
             <a href="produkt-mechanicky-dil.html" class="card">
-                <div class="card-image">
-                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl">
-                </div>
+                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl"></div>
                 <div class="card-info">
                     <h3>Mechanický díl</h3>
                     <p class="price">250 Kč</p>
@@ -50,34 +228,19 @@
             </a>
 
             <a href="produkt-drak.html" class="card">
-                <div class="card-image">
-                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak">
-                </div>
+                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak"></div>
                 <div class="card-info">
                     <h3>Drak</h3>
                     <p class="price">450 Kč</p>
                     <span class="btn">Detail</span>
                 </div>
             </a>
-
-            <a href="produkt-drzak.html" class="card">
-                <div class="card-image">
-                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drzak" alt="Držák">
-                </div>
+            
+             <a href="produkt-drzak.html" class="card">
+                <div class="card-image"><img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drzak" alt="Držák"></div>
                 <div class="card-info">
                     <h3>Držák</h3>
                     <p class="price">150 Kč</p>
-                    <span class="btn">Detail</span>
-                </div>
-            </a>
-            
-             <a href="#" class="card">
-                <div class="card-image">
-                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Vaza" alt="Váza">
-                </div>
-                <div class="card-info">
-                    <h3>Váza</h3>
-                    <p class="price">299 Kč</p>
                     <span class="btn">Detail</span>
                 </div>
             </a>
