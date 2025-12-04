@@ -44,13 +44,80 @@
             list-style: none;
         }
 
-        /* --- MOBILNÍ VERZE (ZDE JE OPRAVA) --- */
-        @media (max-width: 768px) {
-            
-            /* 1. Ukázat tlačítko */
-            .menu-toggle {
-                display: block;
-            }
+/* =========================================
+   📱 MOBILNÍ VERZE (OPRAVENÁ)
+   ========================================= */
+@media (max-width: 768px) {
+    
+    /* 1. Tlačítko MENU viditelné */
+    .menu-toggle { display: block; }
+
+    /* 2. Hlavní menu skryté, dokud se neklikne */
+    .nav-links {
+        display: none; /* Skryté */
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: #000;
+        height: auto;
+        border-bottom: 2px solid #ff6600;
+        padding-bottom: 20px;
+    }
+
+    /* 3. Třída pro zobrazení (JS ji přidá) */
+    .nav-links.active {
+        display: flex !important;
+    }
+
+    .nav-links li {
+        width: 100%;
+        display: block;
+        height: auto;
+        border-bottom: 1px solid #222;
+    }
+
+    .nav-links a {
+        padding: 15px 20px;
+        width: 100%;
+        font-size: 1.1rem; /* Větší písmo pro prsty */
+    }
+
+    /* --- OPRAVA KATEGORIÍ PRO MOBIL --- */
+    /* Na mobilu zrušíme vyskakovací okno a dáme to přímo do seznamu */
+    .dropdown-content {
+        display: block !important; /* !important to VYNUTÍ */
+        position: static; /* Už neplave ve vzduchu */
+        background: #111; /* Mírně světlejší pozadí než hlavní menu */
+        border: none;
+        box-shadow: none;
+        width: 100%;
+        padding-left: 0;
+    }
+    
+    /* Odkazy v podmenu (Kategorie) */
+    .dropdown-content a {
+        padding-left: 40px; /* Odsazení doprava (schod) */
+        font-size: 0.95rem; /* Menší písmo */
+        color: #888;
+        border-bottom: 1px solid #222;
+    }
+
+    .dropdown-content a:hover {
+        color: #fff;
+    }
+    
+    /* Skryjeme šipku dolů na mobilu, ať neplete */
+    .fa-caret-down {
+        display: none;
+    }
+
+    /* Produkty: 2 vedle sebe */
+    .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card-info h3 { font-size: 0.9rem; }
+    .btn { width: 100%; padding: 5px; font-size: 0.9rem; }
+}
 
             /* 2. MENU MUSÍ BÝT SKRYTÉ (display: none) */
             .nav-links {
