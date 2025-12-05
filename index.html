@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Print Studio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         /* --- 1. GLOBÁLNÍ STYLY --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -52,19 +53,9 @@
         footer { background-color: #000; border-top: 2px solid #333; padding: 40px 20px; margin-top: auto; }
         .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
         .footer-section h3 { color: #ff6600; margin-bottom: 20px; font-size: 1rem; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        
-        /* ZDE JE ÚPRAVA PRO ODKAZY POD SEBOU */
-        .footer-section p { margin-bottom: 8px; color: #ccc; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
-        .footer-section a { 
-            display: block; /* Toto zajistí, že jsou pod sebou */
-            margin-bottom: 8px; 
-            color: #ccc; 
-            font-size: 0.9rem; 
-            text-decoration: none; 
-        }
+        .footer-section p, .footer-section a { margin-bottom: 8px; color: #ccc; display: block; font-size: 0.9rem; text-decoration: none; }
         .footer-section a:hover { color: #ff6600; }
-        .footer-section i { color: #ff6600; width: 20px; text-align: center; }
-        
+        .footer-section i { color: #ff6600; width: 20px; text-align: center; margin-right: 5px; }
         .copyright { text-align: center; margin-top: 40px; border-top: 1px solid #222; padding-top: 20px; color: #666; font-size: 0.9rem; }
 
         /* MODALY */
@@ -75,14 +66,18 @@
         .form-section { margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .form-section h3 { color: #ff6600; margin-bottom: 15px; font-size: 1.1rem; border-left: 3px solid #ff6600; padding-left: 10px; }
         
-        /* Radio buttony pod sebou */
         .radio-group label { display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: #252525; padding: 12px; border-radius: 5px; margin-bottom: 5px; border: 1px solid #333; }
         .radio-group input { margin-right: 10px; }
         
         .input-group { margin-bottom: 10px; }
         .input-group input, textarea { width: 100%; padding: 12px; background: #333; border: 1px solid #444; color: white; border-radius: 4px; }
         .btn-order { width: 100%; background: #28a745; color: white; padding: 15px; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 20px; font-size: 1.1rem; }
-        .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 5px 0; }
+        
+        /* Styl položek v košíku */
+        .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 5px 0; font-size: 1rem; }
+        /* Styl pro poplatky (doprava) v košíku */
+        .cart-fee { display: flex; justify-content: space-between; padding: 5px 0; color: #aaa; font-size: 0.95rem; font-style: italic; }
+        
         .btn-remove { color: red; margin-left: 10px; cursor: pointer; }
         #fakturacni-sekce { display: none; margin-top: 15px; border-top: 1px dashed #444; padding-top: 15px; }
         
@@ -227,8 +222,10 @@
             
             <div class="form-section">
                 <h3>1. Košík</h3>
-                <div class="cart-items" id="seznam-zbozi"><p>Prázdno</p></div>
-                <div style="text-align:right; font-weight:bold; color:#ff6600;">Celkem: <span id="finalni-cena">0</span> Kč</div>
+                <div id="seznam-zbozi"></div>
+                <div id="prehled-dopravy" style="border-top: 1px solid #333; margin-top: 10px; padding-top: 5px;"></div>
+                
+                <div style="text-align:right; font-weight:bold; color:#ff6600; font-size: 1.3rem; margin-top: 10px;">Celkem: <span id="finalni-cena">0</span> Kč</div>
             </div>
 
             <form class="order-form" action="https://formspree.io/f/VASE_ID_ZDE" method="POST" onsubmit="pripravitData(event)">
@@ -279,7 +276,8 @@
                     <div id="fakturacni-sekce">
                         <h4 style="margin-top:10px;margin-bottom:5px;color:#aaa;">Fakturační adresa</h4>
                         <div class="input-group"><input type="text" name="FA_Jméno" placeholder="Firma / Jméno"></div>
-                        <div class="input-group"><input type="text" name="FA_Adresa" placeholder="Adresa sídla"></div>
+                        <div class="input-group"><input type="text" name="FA_Ulice" placeholder="Ulice a č.p."></div>
+                        <div class="input-group"><input type="text" name="FA_Město" placeholder="Město a PSČ"></div>
                         <div class="input-group"><input type="text" name="IČO" placeholder="IČO"></div>
                     </div>
                     
@@ -319,7 +317,7 @@
         function pridatDoKosiku(nazev, cena) { 
             kosik.push({ nazev: nazev, cena: cena }); 
             aktualizovatKosik(); 
-            prepocitatCenu();
+            prepocitatCenu(); // Hned přepočítat
             zavritVse();
             otevritKosik();
         }
@@ -341,20 +339,41 @@
             }
         }
 
+        // --- HLAVNÍ ZMĚNA: Výpis dopravy do seznamu ---
         function prepocitatCenu() {
             let cenaZbozi = 0;
             kosik.forEach(p => cenaZbozi += p.cena);
 
+            // Získat cenu a název dopravy
             let cenaDopravy = 0;
+            let nazevDopravy = "";
             const dopravaInput = document.querySelector('input[name="Doprava"]:checked');
-            if(dopravaInput) { cenaDopravy = parseInt(dopravaInput.getAttribute('data-cena')); }
+            if(dopravaInput) { 
+                cenaDopravy = parseInt(dopravaInput.getAttribute('data-cena')); 
+                nazevDopravy = dopravaInput.value; // "Zásilkovna" nebo "PPL"
+            }
 
+            // Získat cenu a název platby
             let cenaPlatby = 0;
+            let nazevPlatby = "";
             const platbaInput = document.querySelector('input[name="Platba"]:checked');
-            if(platbaInput) { cenaPlatby = parseInt(platbaInput.getAttribute('data-cena')); }
+            if(platbaInput) { 
+                cenaPlatby = parseInt(platbaInput.getAttribute('data-cena')); 
+                nazevPlatby = platbaInput.value;
+            }
 
             let celkem = cenaZbozi + cenaDopravy + cenaPlatby;
             document.getElementById("finalni-cena").innerText = celkem;
+
+            // Vložit řádky s poplatky do seznamu
+            let htmlPoplatku = "";
+            if(nazevDopravy) {
+                htmlPoplatku += `<div class="cart-fee">Doprava: ${nazevDopravy} <span>${cenaDopravy} Kč</span></div>`;
+            }
+            if(nazevPlatby) {
+                htmlPoplatku += `<div class="cart-fee">Platba: ${nazevPlatby} <span>${cenaPlatby} Kč</span></div>`;
+            }
+            document.getElementById("prehled-dopravy").innerHTML = htmlPoplatku;
         }
 
         function otevritDetail(nazev, cena, popis, imgUrl) {
