@@ -8,60 +8,53 @@
     <script src="https://widget.packeta.com/v6/www/js/library.js"></script>
     
     <style>
-        /* --- 1. GLOBÁLNÍ STYLY (Platí všude) --- */
+        /* --- 1. GLOBÁLNÍ STYLY --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #ddd; display: flex; flex-direction: column; min-height: 100vh; }
         a { text-decoration: none; color: inherit; cursor: pointer; }
         ul { list-style: none; }
         button { cursor: pointer; font-family: inherit; }
 
-        /* --- 2. HORNÍ LIŠTA (NAVIGACE) --- */
+        /* --- 2. HORNÍ LIŠTA --- */
         nav { 
-            background: #000; 
-            border-bottom: 2px solid #ff6600; 
-            height: 80px; 
-            padding: 0 20px; 
-            display: flex; 
-            align-items: center; 
-            position: fixed; top: 0; width: 100%; z-index: 1000; 
+            background: #000; border-bottom: 2px solid #ff6600; height: 80px; padding: 0 20px; 
+            display: flex; align-items: center; position: fixed; top: 0; width: 100%; z-index: 1000; 
         }
-
         .logo { font-size: 1.5rem; font-weight: bold; color: #fff; margin-right: auto; }
         .logo span { color: #ff6600; }
-
-        /* Pravá strana (Košík + Burger) */
         .nav-right { display: flex; align-items: center; gap: 20px; margin-left: 20px; }
         .cart-icon-wrap { position: relative; color: #fff; }
         .cart-icon-wrap i { font-size: 1.5rem; }
         .cart-count { position: absolute; top: -8px; right: -8px; background: #ff6600; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.8rem; display: flex; justify-content: center; align-items: center; font-weight: bold; }
-        
-        /* Burger menu (defaultně skryté, ukáže se jen na mobilu) */
         .hamburger-btn { display: none; font-size: 2rem; color: #ff6600; cursor: pointer; }
 
-        /* --- 3. MENU PRO POČÍTAČ --- */
+        /* MENU PRO PC */
         .pc-menu { display: flex; align-items: center; height: 100%; }
         .pc-menu li { height: 100%; display: flex; align-items: center; }
         .pc-menu a { padding: 0 15px; color: #ccc; font-weight: 500; transition: 0.3s; }
         .pc-menu a:hover { color: #ff6600; }
 
-        /* --- 4. ROZLOŽENÍ STRÁNKY (PC) --- */
+        /* --- 3. ROZLOŽENÍ STRÁNKY (PC) --- */
         .container { 
             width: 100%; margin-top: 80px; padding: 20px; flex: 1;
-            display: grid; 
-            grid-template-columns: 250px 1fr; /* Sidebar | Obsah */
-            gap: 30px;
+            display: grid; grid-template-columns: 250px 1fr; gap: 30px;
         }
 
-        /* Sidebar na PC */
+        /* LEVÝ PANEL (SIDEBAR) - PC */
         .pc-sidebar {
             background-color: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #333;
             height: fit-content; position: sticky; top: 100px;
         }
-        .pc-sidebar h3 { color: #ff6600; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .pc-sidebar h3 { color: #ff6600; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 1.1rem; }
         .pc-sidebar a { display: block; padding: 10px; color: #ccc; border-bottom: 1px solid #222; }
         .pc-sidebar a:hover { background-color: #333; color: #fff; padding-left: 15px; }
+        
+        /* INFO V LEVÉM PANELU */
+        .sidebar-info-box { margin-top: 30px; padding-top: 20px; border-top: 1px dashed #444; color: #aaa; font-size: 0.9rem; }
+        .sidebar-info-box p { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-info-box i { color: #ff6600; }
 
-        /* Produkty */
+        /* PRODUKTY */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
         .card img { width: 100%; height: 250px; object-fit: cover; }
@@ -69,14 +62,14 @@
         .price { color: #ff6600; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
         .btn-buy { background: #ff6600; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; width: 100%; margin-top: auto; cursor: pointer; }
 
-        /* Patička */
+        /* PATIČKA */
         footer { background-color: #000; border-top: 2px solid #333; padding: 40px 20px; margin-top: auto; }
         .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
         .footer-section h3 { color: #ff6600; margin-bottom: 20px; }
         .footer-section p { margin-bottom: 10px; color: #ccc; }
         .copyright { text-align: center; margin-top: 40px; border-top: 1px solid #222; padding-top: 20px; color: #666; }
 
-        /* Modal (Košík) */
+        /* MODAL */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: #1a1a1a; width: 95%; max-width: 600px; border-radius: 10px; padding: 20px; border: 1px solid #ff6600; max-height: 95vh; overflow-y: auto; position: relative; }
         .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; color: #888; }
@@ -89,71 +82,41 @@
         #fakturacni-sekce { display: none; margin-top: 15px; border-top: 1px dashed #444; padding-top: 10px; }
 
         /* =========================================
-           📱 MOBILNÍ MENU A ZMĚNY (SPECIÁLNÍ SEKCE)
+           📱 MOBILNÍ MENU
            ========================================= */
-        /* Toto menu je na PC skryté, ukáže se jen na mobilu */
         .mobile-menu-container {
-            display: none; /* Defaultně vypnuto */
-            position: fixed;
-            top: 80px; /* Pod lištou */
-            left: 0;
-            width: 100%;
-            background-color: #000;
-            z-index: 999;
+            display: none; /* Skryté */
+            position: fixed; top: 80px; left: 0; width: 100%;
+            background-color: #000; z-index: 999;
             border-bottom: 2px solid #ff6600;
             flex-direction: column;
+            max-height: 80vh; overflow-y: auto; /* Aby šlo scrollovat v menu */
         }
 
-        /* Styl odkazů v mobilním menu */
         .mobile-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            color: #ddd;
-            font-size: 1.1rem;
-            border-bottom: 1px solid #222;
-            background: #000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; color: #ddd; font-size: 1.1rem;
+            border-bottom: 1px solid #222; background: #000;
         }
         .mobile-link:active { background: #1a1a1a; }
         .mobile-link i { color: #ff6600; }
 
-        /* Podmenu (Kategorie) v mobilu */
-        .mobile-submenu {
-            display: none; /* Skryté */
-            background-color: #111;
-            box-shadow: inset 0 0 15px #000;
-        }
-        .mobile-submenu a {
-            display: block;
-            padding: 15px 15px 15px 50px; /* Odsazení zleva */
-            color: #888;
-            font-size: 1rem;
-            border-bottom: 1px solid #222;
-        }
+        .mobile-submenu { display: none; background-color: #111; box-shadow: inset 0 0 15px #000; }
+        .mobile-submenu a { display: block; padding: 15px 15px 15px 50px; color: #888; font-size: 1rem; border-bottom: 1px solid #222; }
 
-        /* --- MEDIA QUERY PRO MOBIL (< 768px) --- */
+        /* INFO BOX V MOBILNÍM MENU */
+        .mobile-info-box { padding: 20px; background: #0a0a0a; color: #888; border-top: 1px solid #333; }
+        .mobile-info-box h3 { color: #ff6600; font-size: 1rem; margin-bottom: 10px; }
+        .mobile-info-box p { margin-bottom: 5px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        .mobile-info-box i { color: #ff6600; }
+
+        /* --- MEDIA QUERY PRO MOBIL --- */
         @media (max-width: 768px) {
-            /* 1. Zobrazit Burger tlačítko */
             .hamburger-btn { display: block; }
-
-            /* 2. Skrýt PC menu v liště */
             .pc-menu { display: none !important; }
-
-            /* 3. Skrýt PC Sidebar (levý sloupec) */
-            .pc-sidebar { display: none !important; }
-
-            /* 4. Resetovat layout na jeden sloupec */
-            .container { 
-                display: block !important; 
-                margin-top: 90px; 
-                padding: 15px; 
-            }
-
-            /* 5. Produkty vedle sebe (2 sloupce) */
+            .pc-sidebar { display: none !important; } /* Skrýt levý panel */
+            .container { display: block !important; margin-top: 90px; padding: 15px; }
             .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            
-            /* 6. Patička na střed */
             .footer-content { grid-template-columns: 1fr; text-align: center; }
         }
     </style>
@@ -192,6 +155,13 @@
         </div>
 
         <a href="#kontakt" class="mobile-link" onclick="toggleMobileMenu()">Kontakt</a>
+
+        <div class="mobile-info-box">
+            <h3>Doprava & Info</h3>
+            <p><i class="fa-solid fa-truck"></i> Zásilkovna (79 Kč)</p>
+            <p><i class="fa-solid fa-box"></i> PPL (119 Kč)</p>
+            <p><i class="fa-solid fa-check"></i> Platba převodem / Dobírkou</p>
+        </div>
     </div>
 
     <div class="container">
@@ -203,6 +173,13 @@
                 <li><a href="#">📂 Flexi zvířátka</a></li>
                 <li><a href="#">📂 Držáky</a></li>
             </ul>
+
+            <div class="sidebar-info-box">
+                <h3>Doprava</h3>
+                <p><i class="fa-solid fa-truck"></i> Zásilkovna</p>
+                <p><i class="fa-solid fa-box"></i> PPL</p>
+                <p><i class="fa-solid fa-money-bill"></i> Dobírka / Převod</p>
+            </div>
         </aside>
 
         <main>
@@ -268,7 +245,6 @@
     </div>
 
     <script>
-        // --- LOGIKA MOBILNÍHO MENU ---
         function toggleMobileMenu() {
             var menu = document.getElementById("mobileMenu");
             if (menu.style.display === "flex") {
@@ -287,7 +263,6 @@
             }
         }
 
-        // --- KOŠÍK ---
         let kosik = [];
         function pridatDoKosiku(nazev, cena) { kosik.push({ nazev: nazev, cena: cena }); aktualizovatKosik(); }
         function smazatZKosiku(index) { kosik.splice(index, 1); aktualizovatKosik(); }
