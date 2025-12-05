@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Print Studio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://widget.packeta.com/v6/www/js/library.js"></script>
-    
     <style>
         /* --- 1. GLOBÁLNÍ STYLY --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -52,11 +50,21 @@
 
         /* PATIČKA */
         footer { background-color: #000; border-top: 2px solid #333; padding: 40px 20px; margin-top: auto; }
-        /* Grid patičky se automaticky přizpůsobí počtu sloupců */
-        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-        .footer-section h3 { color: #ff6600; margin-bottom: 20px; font-size: 1.1rem; text-transform: uppercase; }
-        .footer-section p { margin-bottom: 10px; color: #ccc; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
+        .footer-section h3 { color: #ff6600; margin-bottom: 20px; font-size: 1rem; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        
+        /* ZDE JE ÚPRAVA PRO ODKAZY POD SEBOU */
+        .footer-section p { margin-bottom: 8px; color: #ccc; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        .footer-section a { 
+            display: block; /* Toto zajistí, že jsou pod sebou */
+            margin-bottom: 8px; 
+            color: #ccc; 
+            font-size: 0.9rem; 
+            text-decoration: none; 
+        }
+        .footer-section a:hover { color: #ff6600; }
         .footer-section i { color: #ff6600; width: 20px; text-align: center; }
+        
         .copyright { text-align: center; margin-top: 40px; border-top: 1px solid #222; padding-top: 20px; color: #666; font-size: 0.9rem; }
 
         /* MODALY */
@@ -67,7 +75,8 @@
         .form-section { margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .form-section h3 { color: #ff6600; margin-bottom: 15px; font-size: 1.1rem; border-left: 3px solid #ff6600; padding-left: 10px; }
         
-        .radio-group label { display: flex; align-items: center; cursor: pointer; background: #252525; padding: 10px; border-radius: 5px; margin-bottom: 5px; border: 1px solid #333; }
+        /* Radio buttony pod sebou */
+        .radio-group label { display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: #252525; padding: 12px; border-radius: 5px; margin-bottom: 5px; border: 1px solid #333; }
         .radio-group input { margin-right: 10px; }
         
         .input-group { margin-bottom: 10px; }
@@ -75,8 +84,6 @@
         .btn-order { width: 100%; background: #28a745; color: white; padding: 15px; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 20px; font-size: 1.1rem; }
         .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 5px 0; }
         .btn-remove { color: red; margin-left: 10px; cursor: pointer; }
-        .btn-zasilkovna { background: #d01919; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; margin-top: 5px; display: none; cursor: pointer; font-weight: bold; }
-        .selected-point { font-weight: bold; color: #ff6600; margin-top: 5px; font-size: 0.9rem; }
         #fakturacni-sekce { display: none; margin-top: 15px; border-top: 1px dashed #444; padding-top: 15px; }
         
         .detail-img { width: 100%; border-radius: 5px; margin-bottom: 15px; border: 1px solid #333; }
@@ -221,29 +228,23 @@
             <div class="form-section">
                 <h3>1. Košík</h3>
                 <div class="cart-items" id="seznam-zbozi"><p>Prázdno</p></div>
-                <div style="text-align:right; font-weight:bold; color:#ff6600;">Celkem: <span id="celkova-cena">0</span> Kč</div>
+                <div style="text-align:right; font-weight:bold; color:#ff6600;">Celkem: <span id="finalni-cena">0</span> Kč</div>
             </div>
 
             <form class="order-form" action="https://formspree.io/f/VASE_ID_ZDE" method="POST" onsubmit="pripravitData(event)">
                 <input type="hidden" name="OBSAH_KOŠÍKU" id="hidden-cart">
-                <input type="hidden" name="ZÁSILKOVNA_ID" id="zasilkovna-id">
-                <input type="hidden" name="ZÁSILKOVNA_NÁZEV" id="zasilkovna-nazev">
 
                 <div class="form-section">
                     <h3>2. Doprava</h3>
                     <div class="radio-group">
                         <label>
-                            <input type="radio" name="Doprava" value="Zásilkovna" data-cena="79" onclick="zmenitDopravu('zasilkovna'); prepocitatCenu();" checked> 
-                            Zásilkovna (79 Kč)
+                            <span>Zásilkovna (79 Kč)</span>
+                            <input type="radio" name="Doprava" value="Zásilkovna" data-cena="79" onclick="prepocitatCenu()" checked> 
                         </label>
-                        <button type="button" class="btn-zasilkovna" id="btn-vybrat-zasilkovnu" onclick="vybratZasilkovnu()">
-                            <i class="fa-solid fa-map-marker-alt"></i> Vybrat výdejní místo
-                        </button>
-                        <div id="vybrane-misto" class="selected-point"></div>
-
+                        
                         <label>
-                            <input type="radio" name="Doprava" value="PPL" data-cena="119" onclick="zmenitDopravu('ppl'); prepocitatCenu();"> 
-                            PPL - Doručení na adresu (119 Kč)
+                            <span>PPL - Na adresu (119 Kč)</span>
+                            <input type="radio" name="Doprava" value="PPL" data-cena="119" onclick="prepocitatCenu()"> 
                         </label>
                     </div>
                 </div>
@@ -252,12 +253,12 @@
                     <h3>3. Platba</h3>
                     <div class="radio-group">
                         <label>
+                            <span>Převodem (Zdarma)</span>
                             <input type="radio" name="Platba" value="Převodem" data-cena="0" onclick="prepocitatCenu()" checked> 
-                            Převodem (Zdarma)
                         </label>
                         <label>
+                            <span>Dobírka (+39 Kč)</span>
                             <input type="radio" name="Platba" value="Dobírka" data-cena="39" onclick="prepocitatCenu()"> 
-                            Dobírka (+39 Kč)
                         </label>
                     </div>
                 </div>
@@ -267,8 +268,8 @@
                     <div class="input-group"><input type="text" name="Jméno" placeholder="Jméno a Příjmení" required></div>
                     <div class="input-group"><input type="email" name="Email" placeholder="Váš Email" required></div>
                     <div class="input-group"><input type="tel" name="Telefon" placeholder="Telefon" required></div>
-                    <div class="input-group"><input type="text" name="Ulice" placeholder="Ulice a č.p."></div>
-                    <div class="input-group"><input type="text" name="Město" placeholder="Město a PSČ"></div>
+                    
+                    <div class="input-group"><input type="text" name="Adresa" placeholder="Ulice, Město, PSČ (nebo pobočka Zásilkovny)" required></div>
                     
                     <label style="display:flex;align-items:center;cursor:pointer;font-size:0.9rem;margin-top:10px;">
                         <input type="checkbox" id="stejna-adresa" checked onclick="toggleFakturacni()"> 
@@ -278,8 +279,7 @@
                     <div id="fakturacni-sekce">
                         <h4 style="margin-top:10px;margin-bottom:5px;color:#aaa;">Fakturační adresa</h4>
                         <div class="input-group"><input type="text" name="FA_Jméno" placeholder="Firma / Jméno"></div>
-                        <div class="input-group"><input type="text" name="FA_Ulice" placeholder="Ulice a č.p."></div>
-                        <div class="input-group"><input type="text" name="FA_Město" placeholder="Město a PSČ"></div>
+                        <div class="input-group"><input type="text" name="FA_Adresa" placeholder="Adresa sídla"></div>
                         <div class="input-group"><input type="text" name="IČO" placeholder="IČO"></div>
                     </div>
                     
@@ -341,7 +341,6 @@
             }
         }
 
-        // --- VÝPOČET CENY ---
         function prepocitatCenu() {
             let cenaZbozi = 0;
             kosik.forEach(p => cenaZbozi += p.cena);
@@ -375,20 +374,6 @@
             document.getElementById("kosikModal").style.display = "none"; 
             document.getElementById("detailModal").style.display = "none"; 
         }
-
-        function zmenitDopravu(typ) {
-            const btn = document.getElementById("btn-vybrat-zasilkovnu");
-            if (typ === 'zasilkovna') { btn.style.display = "block"; } else { btn.style.display = "none"; }
-        }
-        function vybratZasilkovnu() {
-            Packeta.Widget.pick('e61d84814ec96726', function(point) {
-                if (point) { 
-                    document.getElementById("vybrane-misto").innerText = "Vybráno: " + point.name; 
-                    document.getElementById("zasilkovna-id").value = point.id; 
-                    document.getElementById("zasilkovna-nazev").value = point.name; 
-                }
-            }, { country: 'cz', language: 'cs' });
-        }
         
         function toggleFakturacni() { 
             const ch = document.getElementById("stejna-adresa"); 
@@ -398,8 +383,6 @@
 
         function pripravitData(event) {
             if(kosik.length === 0) { alert("Košík je prázdný!"); event.preventDefault(); return; }
-            const doprava = document.querySelector('input[name="Doprava"]:checked');
-            if (doprava && doprava.value === "Zásilkovna" && document.getElementById("zasilkovna-id").value === "") { alert("Vyberte Zásilkovnu!"); event.preventDefault(); return; }
             
             let text = JSON.stringify(kosik) + " | CELKEM: " + document.getElementById("finalni-cena").innerText + " Kč";
             document.getElementById("hidden-cart").value = text;
