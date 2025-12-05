@@ -49,14 +49,10 @@
         .pc-sidebar a { display: block; padding: 10px; color: #ccc; border-bottom: 1px solid #222; }
         .pc-sidebar a:hover { background-color: #333; color: #fff; padding-left: 15px; }
         
-        .sidebar-info-box { margin-top: 30px; padding-top: 20px; border-top: 1px dashed #444; color: #aaa; font-size: 0.9rem; }
-        .sidebar-info-box p { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
-        .sidebar-info-box i { color: #ff6600; }
-
         /* PRODUKTY */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
-        .card img { width: 100%; height: 250px; object-fit: cover; }
+        .card img { width: 100%; height: 250px; object-fit: cover; cursor: pointer; }
         .card-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
         .price { color: #ff6600; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
         .btn-buy { background: #ff6600; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; width: 100%; margin-top: auto; cursor: pointer; }
@@ -69,8 +65,8 @@
         .footer-section i { color: #ff6600; width: 20px; text-align: center; }
         .copyright { text-align: center; margin-top: 40px; border-top: 1px solid #222; padding-top: 20px; color: #666; font-size: 0.9rem; }
 
-        /* MODAL */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
+        /* MODAL (Zvýšil jsem z-index, aby byl vždy nahoře) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
         .modal-content { background: #1a1a1a; width: 95%; max-width: 600px; border-radius: 10px; padding: 20px; border: 1px solid #ff6600; max-height: 95vh; overflow-y: auto; position: relative; }
         .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; color: #888; }
         .form-section { margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
@@ -163,20 +159,20 @@
             <div class="products-grid">
                 
                 <div class="card">
-                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl" onclick="otevritDetail('Mechanický díl', 250, 'Odolné ozubené kolo z PETG materiálu. Ideální pro opravy.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Dil')">
+                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl" onclick="otevritDetail('Mechanický díl', 250, 'Odolné ozubené kolo z PETG materiálu.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Dil')">
                     <div class="card-info">
                         <h3>Mechanický díl</h3>
                         <div class="price">250 Kč</div>
-                        <button class="btn-buy" onclick="otevritDetail('Mechanický díl', 250, 'Odolné ozubené kolo z PETG materiálu. Ideální pro opravy.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Dil')">Detail</button>
+                        <button class="btn-buy" onclick="otevritDetail('Mechanický díl', 250, 'Odolné ozubené kolo z PETG materiálu.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Dil')">Detail</button>
                     </div>
                 </div>
 
                 <div class="card">
-                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak" onclick="otevritDetail('Drak Rainbow', 450, 'Pohyblivá figurka draka z duhového materiálu. Antistresová hračka.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Drak')">
+                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak" onclick="otevritDetail('Drak Rainbow', 450, 'Pohyblivá figurka draka.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Drak')">
                     <div class="card-info">
                         <h3>Drak Rainbow</h3>
                         <div class="price">450 Kč</div>
-                        <button class="btn-buy" onclick="otevritDetail('Drak Rainbow', 450, 'Pohyblivá figurka draka z duhového materiálu. Antistresová hračka.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Drak')">Detail</button>
+                        <button class="btn-buy" onclick="otevritDetail('Drak Rainbow', 450, 'Pohyblivá figurka draka.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Drak')">Detail</button>
                     </div>
                 </div>
 
@@ -255,6 +251,7 @@
     </div>
 
     <script>
+        // Menu mobil
         function toggleMobileMenu() {
             var menu = document.getElementById("mobileMenu");
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
@@ -264,22 +261,39 @@
             submenu.style.display = (submenu.style.display === "block") ? "none" : "block";
         }
 
-        let kosik = [];
+        // Košík logika - TOTO BYLO OPRAVENO
+        let kosik = []; // Proměnná pro košík
+
         function pridatDoKosiku(nazev, cena) { 
             kosik.push({ nazev: nazev, cena: cena }); 
             aktualizovatKosik(); 
             zavritVse();
-            otevritKosik();
+            otevritKosik(); // Otevře košík po přidání
         }
-        function smazatZKosiku(index) { kosik.splice(index, 1); aktualizovatKosik(); }
+
+        function smazatZKosiku(index) { 
+            kosik.splice(index, 1); 
+            aktualizovatKosik(); 
+        }
+
         function aktualizovatKosik() {
             document.getElementById("pocet-v-kosiku").innerText = kosik.length;
             let div = document.getElementById("seznam-zbozi");
-            let total = 0; div.innerHTML = "";
-            kosik.forEach((p, i) => { total += p.cena; div.innerHTML += `<div class="cart-item">${p.nazev} - ${p.cena} Kč <i class="fa-solid fa-trash btn-remove" onclick="smazatZKosiku(${i})"></i></div>`; });
+            let total = 0; 
+            div.innerHTML = "";
+            
+            if(kosik.length === 0) {
+                div.innerHTML = "<p>Prázdno</p>";
+            } else {
+                kosik.forEach((p, i) => { 
+                    total += p.cena; 
+                    div.innerHTML += `<div class="cart-item">${p.nazev} - ${p.cena} Kč <i class="fa-solid fa-trash btn-remove" onclick="smazatZKosiku(${i})"></i></div>`; 
+                });
+            }
             document.getElementById("celkova-cena").innerText = total;
         }
 
+        // Modaly
         function otevritDetail(nazev, cena, popis, imgUrl) {
             document.getElementById("detail-nazev").innerText = nazev;
             document.getElementById("detail-cena").innerText = cena + " Kč";
@@ -289,6 +303,14 @@
             document.getElementById("detailModal").style.display = "flex";
         }
 
+        function otevritKosik() { document.getElementById("kosikModal").style.display = "flex"; }
+        
+        function zavritVse() { 
+            document.getElementById("kosikModal").style.display = "none"; 
+            document.getElementById("detailModal").style.display = "none"; 
+        }
+
+        // Doprava
         function zmenitDopravu(typ) {
             const btn = document.getElementById("btn-vybrat-zasilkovnu");
             if (typ === 'zasilkovna') { btn.style.display = "block"; } else { btn.style.display = "none"; }
@@ -301,11 +323,6 @@
         function pripravitData(event) {
             if(kosik.length === 0) { alert("Košík je prázdný!"); event.preventDefault(); return; }
             document.getElementById("hidden-cart").value = JSON.stringify(kosik);
-        }
-        function otevritKosik() { document.getElementById("kosikModal").style.display = "flex"; }
-        function zavritVse() { 
-            document.getElementById("kosikModal").style.display = "none"; 
-            document.getElementById("detailModal").style.display = "none"; 
         }
     </script>
 </body>
