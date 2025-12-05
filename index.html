@@ -49,10 +49,6 @@
         .pc-sidebar a { display: block; padding: 10px; color: #ccc; border-bottom: 1px solid #222; }
         .pc-sidebar a:hover { background-color: #333; color: #fff; padding-left: 15px; }
         
-        .sidebar-info-box { margin-top: 30px; padding-top: 20px; border-top: 1px dashed #444; color: #aaa; font-size: 0.9rem; }
-        .sidebar-info-box p { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
-        .sidebar-info-box i { color: #ff6600; }
-
         /* PRODUKTY */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
@@ -80,6 +76,11 @@
         .btn-remove { color: red; margin-left: 10px; cursor: pointer; }
         .btn-zasilkovna { background: #d01919; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; margin-top: 5px; display: none; cursor: pointer; }
         #fakturacni-sekce { display: none; margin-top: 15px; border-top: 1px dashed #444; padding-top: 10px; }
+        
+        /* Styl pro Detail Produktu */
+        .detail-img { width: 100%; border-radius: 5px; margin-bottom: 15px; }
+        .detail-desc { color: #ccc; line-height: 1.6; margin-bottom: 20px; }
+        .btn-buy-big { width: 100%; background: #ff6600; color: white; padding: 15px; border: none; font-size: 1.2rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
         /* =========================================
            📱 MOBILNÍ MENU
@@ -94,7 +95,9 @@
             padding: 15px 20px; color: #ddd; font-size: 1.1rem;
             border-bottom: 1px solid #222; background: #000;
         }
+        .mobile-link:active { background: #1a1a1a; }
         .mobile-link i { color: #ff6600; }
+
         .mobile-submenu { display: none; background-color: #111; box-shadow: inset 0 0 15px #000; }
         .mobile-submenu a { display: block; padding: 15px 15px 15px 50px; color: #888; font-size: 1rem; border-bottom: 1px solid #222; }
 
@@ -102,12 +105,10 @@
         @media (max-width: 768px) {
             .hamburger-btn { display: block; }
             .pc-menu { display: none !important; }
-            .pc-sidebar { display: none !important; } /* Skrýt levý panel */
+            .pc-sidebar { display: none !important; }
             .container { display: block !important; margin-top: 90px; padding: 15px; }
             .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .footer-content { grid-template-columns: 1fr; text-align: center; } /* Patička pod sebe */
-            .footer-section { margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 20px; }
-            .footer-section p { justify-content: center; } /* Zarovnat ikony a text na střed */
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
         }
     </style>
 </head>
@@ -115,12 +116,10 @@
 
     <nav>
         <div class="logo">3D Print<span>Studio</span></div>
-
         <ul class="nav-links pc-menu">
             <li><a href="#">Domů</a></li>
             <li><a href="#kontakt">Kontakt</a></li>
         </ul>
-
         <div class="nav-right">
             <div class="cart-icon-wrap" onclick="otevritKosik()">
                 <i class="fa-solid fa-shopping-cart"></i>
@@ -134,7 +133,6 @@
 
     <div id="mobileMenu" class="mobile-menu-container">
         <a href="#" class="mobile-link" onclick="toggleMobileMenu()">Domů</a>
-        
         <div class="mobile-link" onclick="toggleMobileSubmenu()" style="cursor: pointer;">
             Kategorie <i class="fa-solid fa-chevron-down"></i>
         </div>
@@ -143,12 +141,10 @@
             <a href="#">📂 Flexi zvířátka</a>
             <a href="#">📂 Držáky</a>
         </div>
-
         <a href="#kontakt" class="mobile-link" onclick="toggleMobileMenu()">Kontakt</a>
     </div>
 
     <div class="container">
-        
         <aside class="pc-sidebar">
             <h3>Kategorie</h3>
             <ul>
@@ -156,34 +152,30 @@
                 <li><a href="#">📂 Flexi zvířátka</a></li>
                 <li><a href="#">📂 Držáky</a></li>
             </ul>
-
-            <div class="sidebar-info-box">
-                <h3>Doprava</h3>
-                <p><i class="fa-solid fa-truck"></i> Zásilkovna</p>
-                <p><i class="fa-solid fa-box"></i> PPL</p>
-                <p><i class="fa-solid fa-money-bill"></i> Dobírka / Převod</p>
-            </div>
         </aside>
 
         <main>
             <h1 style="margin-bottom: 20px;">E-shop</h1>
             <div class="products-grid">
+                
                 <div class="card">
-                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl">
+                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Dil" alt="Díl" onclick="otevritDetail('Mechanický díl', 250, 'Odolné ozubené kolo z PETG materiálu. Ideální pro opravy.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Dil')">
                     <div class="card-info">
                         <h3>Mechanický díl</h3>
                         <div class="price">250 Kč</div>
-                        <button class="btn-buy" onclick="pridatDoKosiku('Mechanický díl', 250)">Do košíku</button>
+                        <button class="btn-buy" onclick="otevritDetail('Mechanický díl', 250, 'Odolné ozubené kolo z PETG materiálu. Ideální pro opravy.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Dil')">Detail</button>
                     </div>
                 </div>
+
                 <div class="card">
-                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak">
+                    <img src="https://placehold.co/600x600/1a1a1a/FFF?text=Drak" alt="Drak" onclick="otevritDetail('Drak Rainbow', 450, 'Pohyblivá figurka draka z duhového materiálu. Antistresová hračka.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Drak')">
                     <div class="card-info">
                         <h3>Drak Rainbow</h3>
                         <div class="price">450 Kč</div>
-                        <button class="btn-buy" onclick="pridatDoKosiku('Drak Rainbow', 450)">Do košíku</button>
+                        <button class="btn-buy" onclick="otevritDetail('Drak Rainbow', 450, 'Pohyblivá figurka draka z duhového materiálu. Antistresová hračka.', 'https://placehold.co/600x600/1a1a1a/FFF?text=Drak')">Detail</button>
                     </div>
                 </div>
+
             </div>
         </main>
     </div>
@@ -194,7 +186,6 @@
                 <h3>O nás</h3>
                 <p>Kvalitní 3D tisk na zakázku. Realizujeme vaše nápady.</p>
             </div>
-            
             <div class="footer-section">
                 <h3>Kontakt</h3>
                 <p><i class="fa-solid fa-envelope"></i> info@muj3dtisk.cz</p>
@@ -202,7 +193,6 @@
                 <p><i class="fa-solid fa-location-dot"></i> Praha</p>
                 <p><i class="fa-solid fa-id-card"></i> IČO: 12345678</p>
             </div>
-
             <div class="footer-section">
                 <h3>Doprava a Platba</h3>
                 <p><i class="fa-solid fa-truck"></i> Zásilkovna (79 Kč)</p>
@@ -210,13 +200,11 @@
                 <p><i class="fa-solid fa-money-bill-wave"></i> Převod (Zdarma)</p>
                 <p><i class="fa-solid fa-hand-holding-dollar"></i> Dobírka (39 Kč)</p>
             </div>
-
             <div class="footer-section">
                 <h3>Sledujte nás</h3>
                 <p>
                     <a href="#" style="margin-right:10px;"><i class="fa-brands fa-facebook fa-lg"></i></a>
                     <a href="#" style="margin-right:10px;"><i class="fa-brands fa-instagram fa-lg"></i></a>
-                    <a href="#"><i class="fa-brands fa-tiktok fa-lg"></i></a>
                 </p>
             </div>
         </div>
@@ -225,7 +213,7 @@
 
     <div class="modal-overlay" id="kosikModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="zavritKosik()">&times;</span>
+            <span class="close-modal" onclick="zavritVse()">&times;</span>
             <h2>Košík</h2>
             <div class="form-section">
                 <div class="cart-items" id="seznam-zbozi"><p>Prázdno</p></div>
@@ -250,21 +238,34 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="zavritVse()">&times;</span>
+            <h2 id="detail-nazev" style="color:#ff6600;">Název produktu</h2>
+            <img id="detail-img" src="" alt="Detail" class="detail-img">
+            <p id="detail-cena" class="price">0 Kč</p>
+            <p id="detail-popis" class="detail-desc">Popis produktu...</p>
+            <button id="btn-pridat-detail" class="btn-buy-big">Vložit do košíku</button>
+        </div>
+    </div>
+
     <script>
         function toggleMobileMenu() {
             var menu = document.getElementById("mobileMenu");
-            if (menu.style.display === "flex") { menu.style.display = "none"; } 
-            else { menu.style.display = "flex"; }
+            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         }
-
         function toggleMobileSubmenu() {
             var submenu = document.getElementById("mobileSubmenu");
-            if (submenu.style.display === "block") { submenu.style.display = "none"; } 
-            else { submenu.style.display = "block"; }
+            submenu.style.display = (submenu.style.display === "block") ? "none" : "block";
         }
 
         let kosik = [];
-        function pridatDoKosiku(nazev, cena) { kosik.push({ nazev: nazev, cena: cena }); aktualizovatKosik(); }
+        function pridatDoKosiku(nazev, cena) { 
+            kosik.push({ nazev: nazev, cena: cena }); 
+            aktualizovatKosik(); 
+            zavritVse();
+            otevritKosik();
+        }
         function smazatZKosiku(index) { kosik.splice(index, 1); aktualizovatKosik(); }
         function aktualizovatKosik() {
             document.getElementById("pocet-v-kosiku").innerText = kosik.length;
@@ -272,6 +273,15 @@
             let total = 0; div.innerHTML = "";
             kosik.forEach((p, i) => { total += p.cena; div.innerHTML += `<div class="cart-item">${p.nazev} - ${p.cena} Kč <i class="fa-solid fa-trash btn-remove" onclick="smazatZKosiku(${i})"></i></div>`; });
             document.getElementById("celkova-cena").innerText = total;
+        }
+
+        function otevritDetail(nazev, cena, popis, imgUrl) {
+            document.getElementById("detail-nazev").innerText = nazev;
+            document.getElementById("detail-cena").innerText = cena + " Kč";
+            document.getElementById("detail-popis").innerText = popis;
+            document.getElementById("detail-img").src = imgUrl;
+            document.getElementById("btn-pridat-detail").onclick = function() { pridatDoKosiku(nazev, cena); };
+            document.getElementById("detailModal").style.display = "flex";
         }
 
         function zmenitDopravu(typ) {
@@ -288,7 +298,10 @@
             document.getElementById("hidden-cart").value = JSON.stringify(kosik);
         }
         function otevritKosik() { document.getElementById("kosikModal").style.display = "flex"; }
-        function zavritKosik() { document.getElementById("kosikModal").style.display = "none"; }
+        function zavritVse() { 
+            document.getElementById("kosikModal").style.display = "none"; 
+            document.getElementById("detailModal").style.display = "none"; 
+        }
     </script>
 </body>
 </html>
